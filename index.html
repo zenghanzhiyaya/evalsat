@@ -1,0 +1,1914 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="LSAT 题型指南、题库、随机刷题与弱项分析">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>LSAT 错题分析台</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a glass instrument panel — dark navy field with two soft light sources, frosted panels, pill navigation, signal-strength bars for type accuracy. Deliberately dark-only. */
+:root{
+  --bg:#070B1A; --paper:rgba(255,255,255,0.045); --sheet:rgba(255,255,255,0.05); --sheet-hi:rgba(255,255,255,0.08);
+  --ink:#EEF1FB; --on-ink:#070B1A; --graphite:#AEB6D1; --muted:#8A93B2; --rule:rgba(255,255,255,0.10);
+  --drop:#5B8CFF; --drop-hi:#7DA2FF; --drop-soft:rgba(91,140,255,0.14); --mark:#E8ECF8;
+  --bad:#FF6B8B; --bad-soft:rgba(255,107,139,0.14); --good:#00E0B8; --good-soft:rgba(0,224,184,0.12); --warn:#FFB86B;
+  --cell:rgba(255,255,255,0.07);
+  --f-display:"Sora","Noto Sans SC","PingFang SC",system-ui,sans-serif;
+  --f-num:"Sora","Noto Sans SC",system-ui,sans-serif;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1080px;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:28px 0;border-bottom:2px solid var(--ink)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,4vw,36px);margin:0 0 14px;line-height:1.15;letter-spacing:.01em}
+h1 small{display:block;font-family:var(--f-mono);font-weight:400;font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;max-width:100%;scrollbar-width:none}
+nav.tabs a{font-weight:500;text-decoration:none;color:var(--graphite);padding:7px 13px;border:1px solid transparent;border-bottom:0;border-radius:4px 4px 0 0;white-space:nowrap;flex:none}
+nav.tabs a[aria-current="page"]{color:var(--ink);background:var(--sheet);border-color:var(--ink)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--drop);outline-offset:2px}
+.status{font-size:13px;color:var(--muted);padding-top:12px;min-height:24px}
+.status b{color:var(--warn);font-weight:500}
+.banner{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;background:var(--drop-soft);border:1px dashed var(--drop);border-radius:6px;padding:10px 14px;font-size:14px}
+.banner strong{color:var(--drop)}
+.banner a:not(.btn){color:var(--drop)}
+section.view{padding-top:16px;display:grid;gap:20px}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:20px;min-width:0}
+.sheet h2{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0 0 4px;text-wrap:balance}
+.sheet h3{font-family:var(--f-display);font-weight:600;font-size:16px;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.label{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.kpi{background:var(--sheet);padding:14px 16px;display:grid;gap:2px}
+.kpi .v{font-family:var(--f-mono);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi .d{font-size:12.5px;color:var(--muted)}
+.up{color:var(--good)} .down{color:var(--bad)}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--rule);border-radius:999px;padding:2px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--graphite);font:inherit;font-size:13px;padding:3px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
+.chart-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
+svg.chart{width:100%;height:auto;display:block;margin-top:8px}
+svg.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.insights{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.insights li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.insights .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;font-weight:600;margin-top:2px}
+.insights li.hot .dot{background:var(--mark);color:var(--on-ink);border-color:var(--mark)}
+.insights a{color:var(--drop)}
+.typelist{display:grid;gap:8px}
+.trow{display:grid;grid-template-columns:minmax(0,180px) 1fr 70px 52px;gap:10px;align-items:center;font-size:14px}
+.trow .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow .nm em{font-style:normal;color:var(--muted);font-size:12px;margin-left:4px}
+.bar{height:10px;background:var(--paper);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--drop)}
+.trow.top .bar i{background:var(--bad)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.trend{font-size:12px;text-align:right;font-family:var(--f-mono)}
+.empty{color:var(--muted);font-size:14px}
+form{display:grid;gap:18px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.field{display:grid;gap:4px;min-width:0}
+.field>span{font-size:13px;color:var(--graphite)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:7px 9px;width:100%;min-width:0}
+input[type=checkbox]{width:auto}
+textarea{min-height:64px;resize:vertical}
+.frac{display:flex;align-items:center;gap:6px}
+.frac input{font-family:var(--f-mono)}
+.bubbles{display:flex;flex-wrap:wrap;gap:8px 10px}
+.bub{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;padding:4px 6px;border-radius:4px}
+.bub:hover{background:var(--paper)}
+.bub .c{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--drop);display:grid;place-items:center;font-family:var(--f-mono);font-size:10px;font-weight:600;color:var(--on-ink);flex:none}
+.bub.on .c{background:var(--mark);border-color:var(--mark)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font:inherit;font-size:13px;border:1px solid var(--rule);background:var(--sheet);color:var(--graphite);padding:3px 10px;border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--on-ink)}
+.misses{display:flex;flex-wrap:wrap;gap:6px}
+.misschip{display:inline-flex;gap:6px;align-items:center;font-size:13px;background:var(--bad-soft);border-radius:4px;padding:3px 4px 3px 9px}
+.misschip button{border:0;background:transparent;color:var(--bad);cursor:pointer;font-size:15px;line-height:1;padding:0 4px}
+.step{display:flex;gap:10px;align-items:baseline;font-family:var(--f-display);font-weight:600;font-size:16px;margin:0 0 8px}
+.step .n{font-family:var(--f-mono);font-size:12px;color:var(--drop)}
+.btn{font:inherit;font-weight:500;border:1px solid var(--ink);background:var(--ink);color:var(--on-ink);padding:8px 18px;border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:3px 11px;font-size:13px}
+.btn.danger{border-color:var(--bad);color:var(--bad);background:transparent}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toast{font-size:13px;color:var(--drop)}
+.toast.err{color:var(--bad)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+th{font-family:var(--f-mono);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--ink);padding:6px 8px}
+td{border-bottom:1px solid var(--rule);padding:9px 8px;vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td select{padding:3px 6px;font-size:13px;width:auto;max-width:170px}
+.pill{display:inline-block;font-size:11.5px;border:1px solid var(--rule);border-radius:999px;padding:0 8px;color:var(--graphite);white-space:nowrap}
+.pill.d1{border-color:var(--good);color:var(--good)} .pill.d2{border-color:var(--warn);color:var(--warn)} .pill.d3{border-color:var(--bad);color:var(--bad)}
+.tiny{font-size:12.5px;color:var(--muted)}
+.snip{max-width:420px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.order{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:0;padding:0;list-style:none;counter-reset:o}
+.order li{border-top:2px solid var(--ink);padding-top:8px;counter-increment:o;font-size:14px}
+.order li::before{content:counter(o);font-family:var(--f-mono);font-size:12px;color:var(--drop);display:block}
+.order b{font-family:var(--f-display)}
+.fam{display:grid;gap:12px}
+.famhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;border-bottom:1px solid var(--rule);padding-bottom:8px}
+.famhead p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.tcard{border:1px solid var(--rule);border-radius:6px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0;scroll-margin-top:20px}
+.tcard.flash{border-color:var(--drop);box-shadow:0 0 0 2px var(--drop-soft)}
+.tcard .en{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-left:6px}
+.cue{font-family:var(--f-mono);font-size:12.5px;background:var(--paper);border-radius:4px;padding:6px 9px;color:var(--graphite);overflow-wrap:anywhere}
+.tcard ol{margin:0;padding-left:20px;font-size:14px;display:grid;gap:2px}
+.trap{font-size:13.5px;border-left:2px solid var(--bad);padding-left:9px;color:var(--graphite)}
+.tfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;border-top:1px dashed var(--rule);padding-top:8px;font-size:12.5px;color:var(--muted)}
+.setup{display:grid;gap:14px}
+.srow{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center}
+@media (max-width:480px){.srow{grid-template-columns:1fr;gap:4px}}
+.poolnote{font-size:13.5px;color:var(--graphite)}
+.qtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--muted)}
+.dots i.cur{border-color:var(--ink);border-width:2.5px}
+.dots i.ok{background:var(--good);border-color:var(--good)}
+.dots i.no{background:var(--bad);border-color:var(--bad)}
+.timer{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px;color:var(--graphite)}
+.timer.over{color:var(--warn);font-weight:600}
+.qlayout{display:grid;gap:18px}
+.qlayout.rc{grid-template-columns:1.1fr 1fr}
+.qlayout.rc .stim{max-height:68vh;overflow:auto;padding-right:8px}
+@media (max-width:820px){.qlayout.rc{grid-template-columns:1fr}.qlayout.rc .stim{max-height:none}}
+.stim{white-space:pre-wrap;font-size:15.5px;line-height:1.8;max-width:72ch;min-width:0}
+.qstem{font-weight:700;margin:0 0 12px;max-width:72ch}
+.choices{display:grid;gap:8px}
+.choice{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;text-align:left;font:inherit;color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:9px 12px;cursor:pointer}
+.choice:hover:not(:disabled){border-color:var(--graphite)}
+.choice:disabled{cursor:default}
+.choice .lt{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--drop);display:grid;place-items:center;font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--drop)}
+.choice.sel .lt{background:var(--mark);border-color:var(--mark);color:var(--on-ink)}
+.choice.right{border-color:var(--good);background:var(--good-soft)}
+.choice.right .lt{background:var(--good);border-color:var(--good);color:var(--on-ink)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.choice.wrong .lt{background:var(--bad);border-color:var(--bad);color:var(--on-ink)}
+.feedback{border-radius:6px;padding:12px 14px;display:grid;gap:8px;font-size:14px;background:var(--paper)}
+.feedback .verdict{font-weight:700}
+.feedback .verdict.ok{color:var(--good)} .feedback .verdict.no{color:var(--bad)}
+.feedback a{color:var(--drop)}
+.bigscore{font-family:var(--f-mono);font-size:56px;font-weight:600;line-height:1}
+.bigscore small{font-size:22px;color:var(--muted)}
+details.rev{border-bottom:1px solid var(--rule);padding:8px 0}
+details.rev summary{cursor:pointer;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+details.rev .stim{font-size:14px;margin-top:8px}
+.drop{border:1.5px dashed var(--rule);border-radius:6px;padding:18px;display:grid;gap:10px;justify-items:start}
+.drop.over{border-color:var(--drop);background:var(--drop-soft)}
+.fmt{font-size:13.5px}
+.fmt summary{cursor:pointer;color:var(--drop)}
+.fmt pre{font-family:var(--f-mono);font-size:12px;background:var(--paper);padding:10px;border-radius:4px;overflow-x:auto;white-space:pre}
+.distbar{display:flex;height:14px;border-radius:3px;overflow:hidden;background:var(--paper)}
+.distbar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;background:var(--c)}
+.setlist{display:grid;gap:6px}
+.setrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;font-size:14px;padding:6px 0;border-bottom:1px solid var(--rule)}
+.blockhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-top:14px;scroll-margin-top:12px}
+.blockhead h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3vw,26px);margin:0}
+.blockhead p{margin:0;color:var(--muted);font-size:13.5px;max-width:72ch;flex-basis:100%}
+.atable{display:grid;gap:7px}
+.arow{display:grid;grid-template-columns:minmax(0,190px) 1fr 84px 48px 40px auto;gap:10px;align-items:center;font-size:14px}
+.arow.small{grid-template-columns:minmax(0,90px) 1fr 84px 48px}
+.arow.head{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:2px;border-bottom:1px solid var(--rule)}
+.arow .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .nm a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--muted)}
+.arow .nm em{font-style:normal;color:var(--muted);font-size:12px;margin-left:4px}
+.arow.few{opacity:.55}
+.bar i.lo{background:var(--bad)} .bar i.mid{background:var(--warn)} .bar i.hi{background:var(--good)}
+.linkbtn{border:0;background:none;padding:0;font:inherit;color:var(--drop);cursor:pointer;text-decoration:underline}
+@media (max-width:560px){.arow{grid-template-columns:minmax(0,1fr) 60px 78px auto}.arow .c-time,.arow .c-trend{display:none}.arow.small{grid-template-columns:minmax(0,70px) 1fr 78px 44px}}
+.prefs{display:grid;max-width:760px}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--rule)}
+.prow:last-child{border-bottom:0}
+.prow .t{font-weight:500}
+.prow .tiny{display:block;margin-top:2px}
+@media (max-width:560px){.prow{grid-template-columns:1fr;gap:8px}}
+.switch{position:relative;width:44px;height:24px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);cursor:pointer;padding:0}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--muted);transition:transform .15s}
+.switch[aria-checked="true"]{background:var(--drop);border-color:var(--drop)}
+.switch[aria-checked="true"]::after{transform:translateX(20px);background:var(--sheet)}
+.pace{display:flex;align-items:center;gap:6px}
+.pace input{width:80px;font-family:var(--f-mono)}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .4s ease}}
+@media (prefers-reduced-motion:reduce){.switch::after{transition:none}}
+@media (max-width:560px){.trow{grid-template-columns:minmax(0,1fr) 70px 54px 44px}}
+
+/* ===== glass theme overrides ===== */
+html{background:var(--bg)}
+body{background:radial-gradient(900px 520px at 10% -6%,rgba(91,140,255,0.26),rgba(7,11,26,0) 60%),radial-gradient(760px 560px at 100% 100%,rgba(0,224,184,0.12),rgba(7,11,26,0) 60%),var(--bg);background-attachment:fixed;min-height:100%}
+header.top{border-bottom:0;padding-block:24px 4px;align-items:center}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:36px;height:36px;border-radius:11px;background:var(--drop);display:grid;place-items:center;font-family:var(--f-num);font-weight:700;color:var(--on-ink);box-shadow:0 0 24px rgba(91,140,255,0.45);flex:none}
+h1{font-family:var(--f-display);font-weight:700;font-size:19px;margin:0;letter-spacing:0}
+h1 small{font-family:var(--f-body);font-size:12px;letter-spacing:0;text-transform:none;color:var(--muted);margin:2px 0 0;order:2}
+h1{display:flex;flex-direction:column}
+nav.tabs{padding:4px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+nav.tabs a{border:0;border-radius:999px;padding:6px 14px;color:var(--graphite)}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{background:var(--ink);color:var(--on-ink);border:0}
+.status{color:var(--muted)}
+.sheet{border-radius:18px;border:1px solid var(--rule);background:var(--sheet);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.sheet h2,.blockhead h2{font-family:var(--f-display);font-weight:700;letter-spacing:-0.01em}
+.blockhead{border-bottom:1px solid var(--rule)}
+.blockhead h2{font-size:clamp(22px,3vw,28px)}
+.banner{border-radius:14px;background:var(--drop-soft);border:1px solid rgba(91,140,255,0.35)}
+.banner strong{color:var(--drop-hi)}
+.kpis{gap:14px;background:none;border:0;border-radius:0;overflow:visible}
+.kpi{border-radius:16px;border:1px solid var(--rule);background:var(--sheet);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 16px}
+.kpi .v{font-family:var(--f-num);font-size:26px}
+.kpi .label{font-family:var(--f-body);font-size:12.5px;letter-spacing:0;text-transform:none}
+.label{color:var(--muted)}
+.seg{border-color:var(--rule);background:rgba(255,255,255,0.03)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
+.btn{background:var(--drop);border-color:var(--drop);color:#fff;border-radius:10px;box-shadow:0 0 18px rgba(91,140,255,0.35)}
+.btn:hover:not(:disabled){background:var(--drop-hi);border-color:var(--drop-hi)}
+.btn.ghost{background:rgba(255,255,255,0.04);border-color:var(--rule);color:var(--ink);box-shadow:none}
+.btn.ghost:hover:not(:disabled){background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2)}
+.btn.danger{background:transparent;border-color:rgba(255,107,139,0.5);color:var(--bad);box-shadow:none}
+input,select,textarea{background:rgba(255,255,255,0.05);border-color:var(--rule);border-radius:10px;color:var(--ink)}
+select option,select optgroup{background:#10162B;color:var(--ink)}
+input::placeholder,textarea::placeholder{color:#626C8C}
+.bar{height:10px;border-radius:999px;background:var(--cell)}
+.bar i{border-radius:999px}
+.bar i.lo{box-shadow:0 0 10px rgba(255,107,139,0.6)} .bar i.mid{box-shadow:0 0 10px rgba(255,184,107,0.5)} .bar i.hi{box-shadow:0 0 10px rgba(91,140,255,0.5)}
+.bar i.hi{background:var(--drop)}
+.insights{gap:10px}
+.insights li{grid-template-columns:8px 1fr;gap:12px;background:rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px}
+.insights li.empty{display:block;background:none;padding:0}
+.insights .dot{width:8px;height:8px;border:0;font-size:0;margin-top:8px;background:var(--drop);box-shadow:0 0 10px var(--drop)}
+.insights li.hot .dot{background:var(--bad);box-shadow:0 0 10px var(--bad)}
+.insights a,.linkbtn{color:var(--drop-hi)}
+svg.chart text{font-family:var(--f-num)}
+.legend span::before{border-radius:50%}
+.chips button{background:rgba(255,255,255,0.04);border-color:var(--rule)}
+.chips button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+.bub:hover{background:rgba(255,255,255,0.06)}
+.bub .c{border-color:var(--drop)}
+.bub.on .c{background:var(--drop);border-color:var(--drop);color:#fff;box-shadow:0 0 8px rgba(91,140,255,0.6)}
+.misschip{background:var(--bad-soft);border-radius:8px}
+th{border-bottom-color:var(--rule)}
+td{border-bottom-color:rgba(255,255,255,0.06)}
+.pill{border-color:var(--rule)}
+.order li{border-top:0;background:rgba(255,255,255,0.04);border:1px solid var(--rule);border-radius:14px;padding:12px 14px}
+.order li::before{color:var(--drop-hi);font-family:var(--f-num);font-size:13px;font-weight:600}
+.tcard{border-radius:14px;background:rgba(255,255,255,0.03)}
+.tcard.flash{border-color:var(--drop);box-shadow:0 0 0 2px rgba(91,140,255,0.3),0 0 24px rgba(91,140,255,0.25)}
+.cue{background:rgba(91,140,255,0.08);border-radius:8px;color:#C6D2F5}
+.trap{border-left:0;padding-left:0;color:var(--graphite)}
+.trap b{color:var(--bad)}
+.tfoot{border-top-color:var(--rule)}
+.famhead{border-bottom-color:var(--rule)}
+.dots i{border-color:rgba(255,255,255,0.25)}
+.dots i.cur{border-color:var(--drop);box-shadow:0 0 8px rgba(91,140,255,0.6)}
+.dots i.ok{background:var(--good);border-color:var(--good)}
+.timer{font-family:var(--f-num)}
+.choice{background:rgba(255,255,255,0.03);border-color:var(--rule);border-radius:12px}
+.choice:hover:not(:disabled){border-color:rgba(255,255,255,0.28);background:rgba(255,255,255,0.06)}
+.choice .lt{font-family:var(--f-num)}
+.choice.sel{border-color:var(--drop);background:var(--drop-soft)}
+.choice.sel .lt{background:var(--drop);border-color:var(--drop);color:#fff}
+.choice.right{border-color:var(--good);background:var(--good-soft)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.feedback{background:rgba(255,255,255,0.04);border:1px solid var(--rule);border-radius:12px}
+.bigscore{font-family:var(--f-num)}
+.drop{border-color:rgba(255,255,255,0.18);border-radius:14px}
+.drop.over{border-color:var(--drop);background:var(--drop-soft)}
+.fmt pre{background:rgba(0,0,0,0.25);border-radius:10px}
+.fmt summary{color:var(--drop-hi)}
+.distbar{border-radius:999px;background:var(--cell)}
+.setrow{border-bottom-color:rgba(255,255,255,0.06)}
+.prow{border-bottom-color:rgba(255,255,255,0.06)}
+.switch{background:rgba(255,255,255,0.08);border-color:var(--rule)}
+.switch[aria-checked="true"]{background:var(--drop);border-color:var(--drop);box-shadow:0 0 12px rgba(91,140,255,0.5)}
+.switch[aria-checked="true"]::after{background:#fff}
+.arow .nm a{color:var(--ink);border-bottom-color:rgba(255,255,255,0.25)}
+.arow.head{border-bottom-color:var(--rule)}
+/* signal-strength bars (type accuracy) */
+.cells{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:3px;align-items:center}
+.cells span{height:12px;border-radius:2px;background:var(--cell)}
+.cells.lo span.on{background:var(--bad);box-shadow:0 0 6px rgba(255,107,139,0.55)}
+.cells.mid span.on{background:var(--warn);box-shadow:0 0 6px rgba(255,184,107,0.45)}
+.cells.hi span.on{background:var(--drop);box-shadow:0 0 6px rgba(91,140,255,0.5)}
+.accv{font-family:var(--f-mono);font-weight:600;font-size:15px;text-align:right}
+.accv.lo{color:var(--bad)} .accv.mid{color:var(--warn)} .accv.hi{color:var(--drop-hi)}
+.mono{font-family:var(--f-mono)}
+.arow{grid-template-columns:minmax(0,210px) minmax(0,1fr) 54px 50px 48px 40px auto}
+.arow.small{grid-template-columns:minmax(0,90px) minmax(0,1fr) 54px 50px 48px}
+/* practice hero ring */
+.ringcard{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ringcard .top{align-self:stretch;display:flex;justify-content:space-between;font-size:13px;color:var(--graphite)}
+.ringcard svg{width:200px;height:200px;max-width:100%}
+.minis{align-self:stretch;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mini{border-radius:12px;padding:10px 12px}
+.mini .k{font-size:12px;color:var(--graphite)} .mini .v{font-family:var(--f-num);font-size:22px;font-weight:600}
+.grid12{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:820px){.grid12,.grid3{grid-template-columns:1fr}}
+@media (max-width:560px){.arow{grid-template-columns:minmax(0,1fr) 70px 46px auto}.arow .c-cells-s{display:none}.arow .c-time,.arow .c-trend,.arow .c-n{display:none}.arow.small{grid-template-columns:minmax(0,64px) minmax(0,1fr) 48px 44px}.arow.small .c-n{display:none}.cells{grid-template-columns:repeat(10,minmax(0,1fr))}.cells span:nth-child(even){display:none}}
+
+/* ===== desktop landscape layout ===== */
+nav.tabs a{display:inline-flex;align-items:center;gap:7px}
+nav.tabs a svg{width:16px;height:16px;flex:none;opacity:.85}
+.sidefoot{display:none}
+@media (min-width:1024px){
+  .wrap{max-width:none;display:grid;grid-template-columns:236px minmax(0,1fr);column-gap:36px;align-items:start}
+  .wrap>*:not(header){grid-column:2;width:100%;max-width:1520px}
+  header.top{grid-column:1;grid-row:1 / span 20;position:sticky;top:env(safe-area-inset-top,0px);height:calc(100vh - env(safe-area-inset-top,0px));flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:26px;padding-block:26px 20px;padding-right:22px;border-right:1px solid var(--rule)}
+  nav.tabs{flex-direction:column;border-radius:16px;padding:6px;gap:2px;overflow:visible}
+  nav.tabs a{display:flex;gap:12px;padding:10px 12px;border-radius:11px;font-size:14.5px}
+  nav.tabs a svg{width:18px;height:18px}
+  nav.tabs a[aria-current="page"]{box-shadow:0 0 18px rgba(232,236,248,0.18)}
+  .sidefoot{display:block;margin-top:auto;font-size:12px;color:var(--muted);line-height:1.6;border-top:1px solid var(--rule);padding-top:14px}
+  .sidefoot b{color:var(--graphite);font-weight:500}
+  .status{padding-top:26px}
+  section.view{gap:22px;padding-bottom:40px}
+  .qlayout,.qlayout.rc{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+  .qlayout .stim,.qlayout.rc .stim{max-height:calc(100vh - 220px);overflow:auto;padding-right:12px;position:sticky;top:20px}
+  .grid12{grid-template-columns:minmax(260px,1fr) minmax(0,2.4fr)}
+}
+@media (min-width:1500px){
+  .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo" aria-hidden="true">L</div><h1><span data-i="app.title">LSAT 错题分析台</span><small>LR × 2 · RC × 1 · 120–180</small></h1></div>
+    <nav class="tabs" aria-label="Pages">
+      <a href="#overview" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg><span data-i="tab.overview"></span></a>
+      <a href="#drill" data-view="drill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span data-i="tab.drill"></span></a>
+      <a href="#guide" data-view="guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg><span data-i="tab.guide"></span></a>
+      <a href="#bank" data-view="bank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5z"/><path d="m2 13 10 5 10-5"/></svg><span data-i="tab.bank"></span></a>
+      <a href="#log" data-view="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span data-i="tab.log"></span></a>
+      <a href="#history" data-view="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span data-i="tab.history"></span></a>
+      <a href="#prefs" data-view="prefs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span data-i="tab.prefs"></span></a>
+    </nav>
+    <div class="sidefoot" data-ih="side.foot"></div>
+  </header>
+  <div class="status" id="status"></div>
+
+  <section class="view" id="v-overview">
+    <div class="actions"><span class="tiny" data-i="ov.jump"></span><button type="button" class="btn ghost sm" data-jump="blkTests" data-i="ov.testsTitle"></button><button type="button" class="btn ghost sm" data-jump="blkPrac" data-i="ov.pracTitle"></button></div>
+
+    <div class="blockhead" id="blkTests"><h2 data-i="ov.testsTitle"></h2><p data-i="ov.testsSub"></p></div>
+    <div class="banner" id="sampleBanner" hidden>
+      <span data-ih="ov.demoT"></span>
+      <a href="#log" class="btn sm" data-i="ov.demoTBtn"></a>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="sheet">
+        <div class="chart-head">
+          <div><h2 data-i="ov.trend"></h2><p class="sub" id="chartSub"></p></div>
+          <div class="seg" role="group">
+            <button type="button" data-chart="score" aria-pressed="true" data-i="ov.chartScore"></button>
+            <button type="button" data-chart="acc" aria-pressed="false" data-i="ov.chartAcc"></button>
+          </div>
+        </div>
+        <div id="chart"></div>
+      </div>
+      <div class="sheet">
+        <h2 data-i="ov.what"></h2>
+        <p class="sub" data-i="ov.whatSub"></p>
+        <ul class="insights" id="insights"></ul>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="sheet">
+        <div class="chart-head">
+          <div><h2 data-i="ov.weak"></h2><p class="sub" data-i="ov.weakSub"></p></div>
+          <div class="seg" role="group">
+            <button type="button" data-sec="LR" aria-pressed="true" data-i="ov.lr"></button>
+            <button type="button" data-sec="RC" aria-pressed="false" data-i="ov.rc"></button>
+          </div>
+        </div>
+        <div class="typelist" id="types"></div>
+      </div>
+      <div class="sheet">
+        <h2 data-i="ov.reasons"></h2>
+        <p class="sub" data-i="ov.reasonsSub"></p>
+        <div class="typelist" id="reasons"></div>
+        <div style="margin-top:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <label class="field" style="width:140px"><span data-i="ov.targetLbl"></span><input id="target" type="number" min="120" max="180" data-iph="ov.targetPh"></label>
+          <span class="tiny" id="targetNote"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blockhead" id="blkPrac"><h2 data-i="ov.pracTitle"></h2><p data-i="ov.pracSub"></p></div>
+    <div class="banner" id="practiceBanner" hidden>
+      <span data-ih="ov.demoP"></span>
+      <a href="#drill" class="btn sm" data-i="ov.demoBtn"></a>
+    </div>
+    <div class="grid12">
+      <div class="sheet ringcard" id="pring"></div>
+      <div class="sheet">
+        <div class="chart-head"><div><h2 data-i="pc.title"></h2><p class="sub" id="pchartSub"></p></div><div class="legend" id="pchartLegend"></div></div>
+        <div id="pchart"></div>
+      </div>
+    </div>
+    <div class="kpis" id="pkpis" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"></div>
+    <div class="grid2">
+      <div class="sheet">
+        <div class="chart-head">
+          <div><h2 data-i="pt.title"></h2><p class="sub" data-i="pt.sub"></p></div>
+          <div class="seg" role="group">
+            <button type="button" data-psec="LR" aria-pressed="true" data-i="ov.lr"></button>
+            <button type="button" data-psec="RC" aria-pressed="false" data-i="ov.rc"></button>
+          </div>
+        </div>
+        <div class="atable" id="ptypes"></div>
+      </div>
+      <div class="sheet">
+        <h2 data-i="pi.title"></h2>
+        <p class="sub" data-i="pi.sub"></p>
+        <ul class="insights" id="pinsights"></ul>
+      </div>
+    </div>
+    <div class="sheet">
+      <h2 data-i="pd.title"></h2>
+      <p class="sub" data-i="pd.sub"></p>
+      <div id="pdiff" class="grid3"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-drill" hidden><div id="drillBody"></div></section>
+
+  <section class="view" id="v-guide" hidden>
+    <div class="sheet">
+      <h2 data-i="g.orderTitle"></h2>
+      <p class="sub" data-i="g.orderSub"></p>
+      <ol class="order" id="orderList"></ol>
+    </div>
+    <div id="guideBody" style="display:grid;gap:20px"></div>
+  </section>
+
+  <section class="view" id="v-bank" hidden>
+    <div class="banner" id="bankBanner" hidden><span data-ih="b.banner"></span></div>
+    <div class="sheet">
+      <h2 data-i="b.import"></h2>
+      <p class="sub" data-i="b.importSub"></p>
+      <div class="seg" role="group" style="margin-bottom:14px">
+        <button type="button" data-imp="file" aria-pressed="true" data-i="b.tabFile"></button>
+        <button type="button" data-imp="paste" aria-pressed="false" data-i="b.tabPaste"></button>
+        <button type="button" data-imp="image" aria-pressed="false" data-i="b.tabImg"></button>
+      </div>
+      <div id="imp-file" class="drop">
+        <div><span data-i="b.drop"></span> <span class="tiny" data-i="b.dropHint"></span></div>
+        <input type="file" id="fileIn" accept=".pdf,.json,.csv,.tsv,.txt,application/pdf,application/json,text/csv,text/plain" style="max-width:340px">
+      </div>
+      <div id="pdfBox" hidden style="border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-top:12px;display:grid;gap:12px">
+        <div><b id="pdfName"></b> <span class="tiny" id="pdfInfo"></span></div>
+        <div class="fields">
+          <div class="field"><span data-i="b.pdfPages"></span><div class="frac"><input id="pdfFrom" type="number" min="1"><span>–</span><input id="pdfTo" type="number" min="1"></div></div>
+          <div class="field"><span data-i="b.pdfKey"></span><div class="frac"><input id="keyFrom" type="number" min="1" data-iph="b.from"><span>–</span><input id="keyTo" type="number" min="1" data-iph="b.to"></div></div>
+        </div>
+        <p class="tiny" style="margin:0" data-i="b.pdfNote"></p>
+        <div class="actions"><button class="btn" type="button" id="pdfGo" data-i="b.pdfGo"></button><button class="btn ghost" type="button" id="pdfCancel" data-i="c.cancel"></button></div>
+      </div>
+      <div id="imp-paste" hidden style="display:grid;gap:10px">
+        <textarea id="pasteIn" style="min-height:180px" data-iph="b.pastePh"></textarea>
+        <div class="actions"><button class="btn" type="button" id="pasteGo" data-i="b.pasteGo"></button><span class="tiny" id="pasteNote"></span></div>
+      </div>
+      <div id="imp-image" class="drop" hidden>
+        <div><span id="imgLead"></span> <span class="tiny" data-i="b.imgSub"></span></div>
+        <input type="file" id="imgIn" accept="image/png,image/jpeg,image/webp,image/gif" multiple style="max-width:340px">
+      </div>
+      <div class="actions" style="margin-top:12px"><span class="toast" id="impMsg" role="status"></span><button class="btn ghost sm" type="button" id="impStop" hidden data-i="b.stop"></button></div>
+      <details class="fmt" style="margin-top:10px">
+        <summary data-i="b.fmt"></summary>
+        <p data-ih="b.fmtBody"></p>
+        <pre id="csvTpl">section,type,difficulty,stimulus,question,A,B,C,D,E,answer,explanation
+LR,Flaw,medium,"Every member who practiced daily won a tournament. Marisol won, so she practiced daily.","The reasoning is flawed because the argument","treats a sufficient condition as necessary","relies on an unreliable source","generalizes from one case","assumes a whole's traits apply to its parts","confuses cause and effect",A,"Sufficient treated as necessary"</pre>
+        <div class="actions"><button class="btn ghost sm" type="button" data-copy="csvTpl" data-i="b.copyCsv"></button><button class="btn ghost sm" type="button" data-copy="jsonTpl" data-i="b.copyJson"></button><span class="tiny" id="copyMsg"></span></div>
+        <pre id="jsonTpl" hidden>[
+  {
+    "section": "LR",
+    "type": "NA",
+    "difficulty": "easy",
+    "stimulus": "...",
+    "question": "The argument depends on assuming which one of the following?",
+    "choices": ["...", "...", "...", "...", "..."],
+    "answer": "B",
+    "explanation": "..."
+  }
+]</pre>
+      </details>
+    </div>
+
+    <div class="sheet" id="preview" hidden>
+      <h2 data-i="pv.title"></h2>
+      <p class="sub" id="pvSub"></p>
+      <div id="pvWarn" class="tiny"></div>
+      <div class="fields" style="margin-top:12px"><label class="field"><span data-i="pv.name"></span><input id="pvName"></label></div>
+      <label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px" id="pvAiWrap"><input type="checkbox" id="pvAi" checked> <span id="pvAiTxt"></span></label>
+      <div class="tablewrap" style="margin-top:12px"><table><thead><tr><th data-i="col.q"></th><th data-i="col.sec"></th><th data-i="col.type"></th><th data-i="col.diff"></th><th data-i="col.ans"></th></tr></thead><tbody id="pvRows"></tbody></table></div>
+      <div class="actions" style="margin-top:14px"><button class="btn" type="button" id="pvGo" data-i="pv.go"></button><button class="btn ghost" type="button" id="pvCancel" data-i="c.cancel"></button><span class="toast" id="pvMsg" role="status"></span></div>
+    </div>
+
+    <div class="sheet">
+      <div class="chart-head">
+        <div><h2 data-i="b.mine"></h2><p class="sub" id="bankSub"></p></div>
+        <button class="btn ghost sm" type="button" id="aiFill" hidden></button>
+      </div>
+      <div id="bankDist"></div>
+      <div class="setlist" id="setList" style="margin-top:14px"></div>
+      <div class="actions" style="margin-top:16px">
+        <div class="seg" role="group" id="bkDiff">
+          <button type="button" data-v="all" aria-pressed="true" data-i="c.all"></button><button type="button" data-v="1" aria-pressed="false" data-i="d.1"></button><button type="button" data-v="2" aria-pressed="false" data-i="d.2"></button><button type="button" data-v="3" aria-pressed="false" data-i="d.3"></button><button type="button" data-v="0" aria-pressed="false" data-i="d.0"></button>
+        </div>
+        <input id="bkSearch" data-iph="b.search" style="max-width:220px">
+        <span class="toast" id="bkMsg" role="status"></span>
+      </div>
+      <div class="tablewrap" style="margin-top:10px"><table><thead><tr><th data-i="col.q"></th><th data-i="col.sec"></th><th data-i="col.type"></th><th data-i="col.diff"></th><th data-i="col.tries"></th></tr></thead><tbody id="bkRows"></tbody></table></div>
+      <p class="tiny" id="bkMore"></p>
+    </div>
+  </section>
+
+  <section class="view" id="v-log" hidden>
+    <form class="sheet" id="form" autocomplete="off">
+      <div>
+        <p class="step"><span class="n">1</span><span data-i="log.s1"></span></p>
+        <div class="fields">
+          <label class="field"><span data-i="col.date"></span><input id="f-date" type="date" required></label>
+          <label class="field"><span data-i="log.kind"></span><select id="f-kind"><option value="PT" data-i="k.PT"></option><option value="Section" data-i="k.Section"></option><option value="Drill" data-i="k.Drill"></option></select></label>
+          <label class="field"><span data-i="log.source"></span><input id="f-source" data-iph="log.sourcePh"></label>
+          <label class="field"><span data-i="log.score"></span><input id="f-score" type="number" min="120" max="180" placeholder="120–180"></label>
+        </div>
+      </div>
+      <div>
+        <p class="step"><span class="n">2</span><span data-i="log.s2"></span></p>
+        <div class="fields">
+          <div class="field"><span data-i="log.lr"></span><div class="frac"><input id="f-lrc" type="number" min="0"><span>/</span><input id="f-lrt" type="number" min="0" value="51"></div></div>
+          <div class="field"><span data-i="log.rc"></span><div class="frac"><input id="f-rcc" type="number" min="0"><span>/</span><input id="f-rct" type="number" min="0" value="27"></div></div>
+        </div>
+        <p class="tiny" style="margin:6px 0 0" data-i="log.zero"></p>
+      </div>
+      <div>
+        <p class="step"><span class="n">3</span><span data-i="log.s3"></span></p>
+        <div class="chips" id="reasonPick" role="group"></div>
+        <div style="margin-top:12px" class="seg" role="group">
+          <button type="button" data-fsec="LR" aria-pressed="true" data-i="log.lrTypes"></button>
+          <button type="button" data-fsec="RC" aria-pressed="false" data-i="log.rcTypes"></button>
+        </div>
+        <div class="bubbles" id="typePick" style="margin-top:12px"></div>
+        <p class="label" style="margin:14px 0 6px" id="missCount"></p>
+        <div class="misses" id="missList"></div>
+      </div>
+      <label class="field"><span data-i="log.notes"></span><textarea id="f-notes" data-iph="log.notesPh"></textarea></label>
+      <div class="actions">
+        <button class="btn" type="submit" id="saveBtn" data-i="log.save"></button>
+        <button class="btn ghost" type="button" id="resetBtn" data-i="log.clear"></button>
+        <span class="toast" id="toast" role="status"></span>
+      </div>
+    </form>
+  </section>
+
+  <section class="view" id="v-history" hidden>
+    <div class="sheet">
+      <h2 data-i="h.title"></h2>
+      <p class="sub" id="histSub"></p>
+      <div class="tablewrap"><table>
+        <thead><tr><th data-i="col.date"></th><th data-i="col.session"></th><th data-i="col.score"></th><th>LR</th><th>RC</th><th data-i="col.most"></th><th></th></tr></thead>
+        <tbody id="hist"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-prefs" hidden>
+    <div class="sheet">
+      <h2 data-i="s.title"></h2>
+      <p class="sub" id="prefSaved" role="status"></p>
+      <div class="prefs">
+        <div class="prow"><div><span class="t" data-i="s.lang"></span><span class="tiny" data-i="s.langSub"></span></div>
+          <div class="seg" role="group" id="prefLang"><button type="button" data-lang="zh" aria-pressed="false">中文</button><button type="button" data-lang="en" aria-pressed="false">English</button></div></div>
+        <div class="prow"><div><span class="t" data-i="s.count"></span><span class="tiny" data-i="s.countSub"></span></div>
+          <div class="seg" role="group" id="prefCount"><button type="button" data-v="5">5</button><button type="button" data-v="10">10</button><button type="button" data-v="20">20</button></div></div>
+        <div class="prow"><div><span class="t" data-i="s.showType"></span><span class="tiny" data-i="s.showTypeSub"></span></div>
+          <button type="button" class="switch" role="switch" id="prefShow" data-ial="s.showType"></button></div>
+        <div class="prow"><div><label class="t" for="prefPace" data-i="s.pace"></label><span class="tiny" data-i="s.paceSub"></span></div>
+          <div class="pace"><input id="prefPace" type="number" min="20" max="600" step="1"><span class="tiny" data-i="s.sec"></span></div></div>
+        <div class="prow"><div><span class="t" data-i="s.autoAi"></span><span class="tiny" data-i="s.autoAiSub"></span></div>
+          <button type="button" class="switch" role="switch" id="prefAi" data-ial="s.autoAi"></button></div>
+        <div class="prow"><div><span class="t" data-i="s.export"></span><span class="tiny" data-i="s.exportSub"></span></div>
+          <div class="actions"><button class="btn ghost sm" type="button" id="exportBtn" data-i="s.exportBtn"></button><span class="toast" id="exportMsg" role="status"></span></div></div>
+        <div class="prow"><div><span class="t" data-i="s.where"></span><span class="tiny" id="prefWhere"></span></div><span></span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* =================== i18n =================== */
+const I18N={
+zh:{
+"app.title":"LSAT 错题分析台","tab.overview":"概览","tab.drill":"刷题","tab.guide":"题型指南","tab.bank":"题库","tab.log":"记录模考","tab.history":"历史","tab.prefs":"设置",
+"st.connecting":"正在连接你的记录…","st.slow":"<b>暂时连不上你保存的记录，</b>稍后会自动重试。","st.fail":"<b>记录读取失败（{c}）。</b>刷新页面再试。","st.db":"已连接 · 记录和题库保存在你的账号里，只有你自己能看到","st.local":"记录和题库保存在这个浏览器里",
+"c.cancel":"取消","c.all":"全部","c.del":"删除","c.confirmDel":"确认删除？","c.delFail":"删除失败","c.unspecified":"未注明","c.untagged":"未标注","c.saving":"保存中…","c.saved":"已保存","c.saveFail":"保存失败，再试一次",
+"d.1":"易","d.2":"中","d.3":"难","d.0":"未分级","d.mix":"混合",
+"k.PT":"全真模考","k.Section":"单节计时","k.Drill":"专项练习",
+"r.misread":"误读题干/文章","r.twoAns":"二选一选错","r.concept":"逻辑概念不清","r.time":"时间不够","r.careless":"粗心","r.guess":"蒙的",
+"col.q":"题目","col.sec":"科目","col.type":"题型","col.diff":"难度","col.ans":"答案","col.tries":"做过","col.date":"日期","col.session":"练习","col.score":"量表分","col.most":"错题最多",
+"ov.demo":"<strong>示例数据</strong> · 下面是 6 次虚构模考，用来展示分析效果。你做完第一组刷题或记录第一次模考后，就会换成你自己的数据。","ov.demoBtn":"去刷 10 题",
+"ov.trend":"分数走势","ov.chartScore":"量表分","ov.chartAcc":"正确率","ov.subScore":"量表分 · 虚线为目标","ov.subAcc":"每次练习的正确率","ov.noScore":"在“记录模考”里填写量表分，这里就会出现走势。","ov.noAcc":"还没有正确率数据。","ov.target":"目标 {n}",
+"ov.what":"该练什么","ov.whatSub":"根据错题分布自动生成","ov.weak":"弱项题型","ov.weakSub":"平均每次练习错几道 · 箭头对比最近一半与更早一半","ov.lr":"逻辑推理 LR","ov.rc":"阅读 RC","ov.per":"{n}/次","ov.flat":"持平","ov.noTypes":"还没有这一科的错题记录。",
+"ov.reasons":"错因","ov.reasonsSub":"所有错题的原因分布","ov.noMiss":"还没有错题记录。","ov.targetLbl":"目标分数","ov.targetPh":"如 170","ov.targetMet":"近 3 次平均已达到目标","ov.targetGap":"距目标还差约 {n} 分",
+"kpi.last":"最近一次模考","kpi.noScore":"还没有量表分","kpi.vs":"比上次","kpi.avg3":"近 3 次平均","kpi.best":"最高 {n}","kpi.lr":"LR 正确率","kpi.rc":"RC 正确率","kpi.r3":"近 3 次 {p}","kpi.sess":"模考 / 错题","kpi.sessSub":"次模考 / 道错题",
+"in.lr":"LR 先攻<b>{name}</b>","in.lrD":"占 LR 错题 {p}%，平均每次错 {n} 道。","in.next":"其次是{name}。","in.rc":"RC 重点看<b>{name}</b>","in.rcD":"平均每次错 {n} 道。","in.how":"看做法 →","in.reason":"最常见错因：<b>{r}</b>","in.reasonD":"{p}% 的错题。","in.imp":"进步最明显：{name}","in.impD":"最近每次比之前少错 {n} 道。","in.none":"做几组刷题后，这里会给出建议。",
+"tip.misread":"做题时先用一句话复述题目问的是什么，再看选项。","tip.twoAns":"二选一时回到题干，找出让错误选项不成立的那个词。","tip.concept":"回头把条件推理（充分/必要）重新过一遍。","tip.time":"练单节计时，卡住超过 2 分钟的题先跳过，最后回头。","tip.careless":"在 not / except / least 这类词上做标记。","tip.guess":"蒙对的题也要复盘，当作错题处理。",
+"h.title":"全部记录","h.count":"共 {n} 次练习","h.empty":"还没有记录。概览页显示的是示例数据。",
+"log.s1":"这次练了什么","log.kind":"类型","log.source":"来源 / 编号","log.sourcePh":"如 PT 141","log.score":"量表分（可选）","log.s2":"做对多少","log.lr":"逻辑推理 LR（两节合计）","log.rc":"阅读 RC","log.zero":"没做的科目把总题数填 0。","log.s3":"错题：先选错因，再点题型（每错一道点一次）","log.lrTypes":"LR 题型","log.rcTypes":"RC 题型","log.logged":"已记录 {n} 道错题","log.notes":"备注","log.notesPh":"比如：RC 第三篇科学类文章卡了 12 分钟","log.save":"保存这次练习","log.clear":"清空","log.saved":"已保存。概览已更新。","log.errCount":"做对的题数不能超过总题数，请检查第 2 步。","log.errEmpty":"至少填写一科的做题数或记录一道错题。","log.errQuota":"存储空间已满，删除一些旧记录后再试。","log.errSave":"没能保存。检查网络后再点一次保存。","log.remove":"移除",
+"g.orderTitle":"刚开始练？按这个顺序学","g.orderSub":"LSAT 的题型可以归成几个“族”。同一族的题用的是同一套思路，学会一个，同族的其他题就容易很多。","g.cue":"题干信号","g.how":"怎么做","g.trap":"常见陷阱：","g.acc":"刷题正确率 {p}%（{n} 次）","g.never":"还没刷过","g.missed":"记录里错过 {n} 道","g.pType":"刷这类题（{n}）","g.pFam":"刷这一族（{n} 题）",
+"o.1t":"结构描述族","o.1d":"先学会找结论、分清前提。这是所有题的地基。","o.2t":"假设族","o.2d":"LR 里占比最大。核心是找出证据和结论之间的“缺口”。","o.3t":"推断族","o.3d":"思路反过来：不批评论证，只看什么能被严格推出。","o.4t":"解释矛盾 · 平行族","o.4d":"前面的功夫扎实后再练，难题多集中在这里。","o.5t":"阅读 RC","o.5d":"从开始就每周练 2 篇，边读边写段意。",
+"dr.sample":"<strong>示例题库</strong> · 现在用的是 17 道原创示范题。<a href=\"#bank\">导入你自己的题目</a>后就会从你的题库里出题。","dr.title":"随机刷题","dr.sub":"选好条件，从题库里随机抽题。混合难度会尽量让易、中、难各占一些。","dr.diff":"难度","dr.sec":"科目","dr.type":"题型","dr.scope":"范围","dr.count":"题数","dr.allTypes":"全部题型","dr.whole":"整个{f}","dr.sAll":"全部题","dr.sNew":"没做过的","dr.sWrong":"上次做错的","dr.show":"做题时显示题型（练识别题型时建议关掉）","dr.pool":"符合条件：<b>{n}</b> 题","dr.dist":"（易 {a} · 中 {b} · 难 {c}{d}）","dr.distU":" · 未分级 {n}","dr.short":"，不足 {c} 题，这次出 {n} 题","dr.start":"开始 {n} 题","dr.none":"没有符合条件的题，换个条件试试。","dr.recent":"最近几组","dr.recentSub":"刷完自动计入概览的正确率和弱项分析","dr.noRecent":"还没有刷题记录。","dr.src":"随机刷题","dr.retry":"重刷错题",
+"q.of":"第 {i} / {n} 题","q.quit":"放弃这组","q.quitC":"确认放弃？","q.confirm":"确认答案","q.next":"下一题","q.results":"查看结果","q.keys":"键盘：A–E 选择，Enter 确认","q.right":"答对了","q.wrong":"答错了 · 正确答案是 {L}","q.time":"用时 {t}","q.untyped":"题型未标注","q.howShort":"这类题的做法：","q.fullHow":"完整做法 →","q.why":"为什么错（可选）","q.over":"超过目标用时 {t}",
+"rs.line":"正确率 {p}% · 共用时 {t} · 平均每题 {a}","rs.note":"LSAT 实考每节 35 分钟约 25 题，平均每题约 1:24。你设定的目标是每题 {t}。","rs.saving":"正在保存…","rs.saved":"已计入概览和历史。","rs.fail":"没能保存这组结果，检查网络后刷新页面。","rs.again":"再来一组","rs.redo":"只重刷这 {n} 道错题","rs.change":"换条件","rs.where":"这组错在哪","rs.perfect":"全对，可以试试更难的题。","rs.n":"{n} 道","rs.how":"看做法","rs.review":"逐题回顾","rs.ok":"对","rs.no":"错","rs.chose":"你选 {c} · 答案 {a}",
+"b.banner":"<strong>示例题库</strong> · 你还没有导入题目。现在刷题用的是 17 道原创示范题（LR 13 道，RC 4 道），导入你自己的题目后会自动换掉。","b.import":"导入题目","b.importSub":"支持 PDF、JSON、CSV 文件；也可以粘贴文字或上传截图，让 AI 识别出题目、题型和难度。","b.tabFile":"上传文件","b.tabPaste":"粘贴文字","b.tabImg":"截图 / 照片","b.drop":"把文件拖到这里，或选择文件。","b.dropHint":".pdf · .json · .csv · .tsv · .txt（PDF 和 txt 由 AI 识别题目）",
+"b.pdfPages":"题目在第几页","b.pdfKey":"答案页（可选）","b.from":"起","b.to":"止","b.pdfNote":"答案和解析在 PDF 后面的话，把那几页填进“答案页”，AI 会按题号把答案对上。一次最多识别 40 页，大的 PDF 分几次导入。扫描版 PDF 会按图片识别，一次最多 12 页。","b.pdfGo":"识别这些页","b.pdfInfo":"共 {n} 页",
+"b.pastePh":"把题目连同选项（和答案，如果有）粘贴到这里。可以一次粘贴多道题。","b.pasteGo":"识别题目","b.pasteAi":"AI 会识别题目、选项、答案，并标上题型和难度。","b.pasteNoAi":"这里用不了 AI 识别，只能粘贴 JSON 或 CSV 格式。","b.imgLead":"上传题目截图或照片，一次最多 {n} 张。","b.imgSub":"每张图里的题目都会被识别出来。","b.stop":"停止",
+"b.fmt":"文件格式说明","b.fmtBody":"CSV 第一行是表头。<b>section</b> 填 LR 或 RC；<b>type</b> 可以填英文代码、英文全名或中文名（如 Flaw、Necessary Assumption、必要假设）；<b>difficulty</b> 填 易/中/难、easy/medium/hard，或 1–5 的数字；<b>answer</b> 填 A–E。难度和题型可以留空，导入时让 AI 补全。","b.copyCsv":"复制 CSV 模板","b.copyJson":"复制 JSON 模板","b.copied":"已复制","b.selected":"已选中，按 Ctrl/⌘+C 复制",
+"b.mine":"我的题库","b.sub":"{s}共 {n} 题 · LR {lr} · RC {rc}","b.subSample":"示例题库 · ","b.aiFill":"AI 补全未分级题目（{n}）","b.search":"搜索题目文字","b.more":"显示前 100 道，共 {n} 道。用搜索缩小范围。","b.none":"没有符合条件的题目。","b.tries":"{n} 次","b.lastWrong":"上次错","b.setMeta":"{n} 题 · {d}","b.confirmSet":"确认删除整个题库？","b.aiRating":"AI 正在分级（{i}/{n}）…","b.aiDone":"已补全。",
+"m.reading":"正在读取…","m.txtNoAi":"txt 文件需要 AI 识别，但这里用不了 AI。请改用 JSON 或 CSV 格式。","m.parseFail":"文件解析失败：{m}。可以对照下面的格式说明检查。","m.noQs":"没有识别到题目。检查文件格式，或换“粘贴文字”让 AI 识别。","m.noAns":"识别到 {n} 道题，但都缺少答案或选项，无法导入。请确认有答案（A–E）。","m.ai":"AI 正在识别{p}… 通常需要半分钟到一分钟","m.part":"（第 {i}/{n} 段）","m.imgPart":"（{a}–{b} / {n}）","m.stopped":"已停止。","m.pasteEmpty":"先粘贴题目文字。","m.pasteNoAi":"这里用不了 AI 识别。请把题目整理成 JSON 或 CSV 再导入。",
+"m.pdfNoAi":"PDF 需要 AI 识别题目，但这里用不了 AI。请把题目整理成 JSON 或 CSV 再导入。","m.pdfOpening":"正在打开 PDF…","m.pdfPwd":"这个 PDF 有密码，先去掉密码再上传。","m.pdfBad":"PDF 打不开，可能文件已损坏，或者 PDF 工具没能加载。刷新页面再试。","m.pdfRange":"页码要在 1–{n} 之间，而且起始页不能大于结束页。","m.pdf40":"一次最多识别 40 页。把范围缩小，分几次导入。","m.pdfKey":"答案页的页码不对（最多 10 页）。","m.pdfText":"正在读取 PDF 文字…","m.pdfScanNoImg":"这是扫描版 PDF（没有可选中的文字），需要按图片识别，但这里不能向 AI 发送图片。","m.pdfScan12":"这是扫描版 PDF，要按图片识别，一次最多 12 页。请缩小页码范围。","m.pdfConv":"扫描版 PDF，正在转换第 {n} 页…","m.pdfErr":"读取 PDF 时出错，换个页码范围再试。","m.pdfName":"{f} 第 {a}–{b} 页","m.paste":"粘贴的题目","m.img":"截图导入","m.import":"导入 {d}",
+"pv.title":"确认导入","pv.sub":"识别出 {n} 道题：LR {lr} 道，RC {rc} 道。难度：易 {a} · 中 {b} · 难 {c} · 未分级 {u}。","pv.noAns":"{n} 道题没有答案，已跳过。","pv.bad":"{n} 条内容不完整（缺题目或选项），已跳过。","pv.noType":"{n} 道题的题型没认出来。","pv.name":"题库名称","pv.ai":"导入前用 AI 补全缺少的难度和题型（{n} 题）","pv.more":"还有 {n} 道…","pv.unrec":"未识别","pv.go":"导入","pv.aiFilling":"AI 正在补全难度和题型（{i}/{n}）…","pv.aiFail":" 先按现有信息导入。","pv.saving":"正在保存（{i}/{n}）…","pv.done":"已导入 {n} 道题。","pv.quota":"存储空间满了，删除一些旧题库后再试。","pv.fail":"保存失败，检查网络后再试。","pv.unnamed":"未命名题库",
+"ai.not_granted":"你没有允许这个页面使用 Claude，AI 识别不可用。","ai.sampling_disabled":"你的账号现在不能用 AI 功能。","ai.rate_limited":"AI 调用太频繁或已到用量上限，稍后再试。","ai.invalid_json":"AI 返回的格式不对，再试一次；如果反复失败，每次少放一些题。","ai.prompt_too_large":"内容太长，分几次导入。","ai.refused":"AI 拒绝处理这段内容，换一段试试。","ai.session_expired":"登录已过期，请重新登录。","ai.image_rejected":"图片无法读取，换一张 PNG 或 JPG 试试。","ai.other":"AI 暂时出错了，稍后再试。",
+"ov.testsTitle":"模考分析","ov.testsSub":"全真模考和单节计时的成绩：分数走势，以及模考里最常错的题型。","ov.pracTitle":"日常练习","ov.pracSub":"来自每组刷题的逐题数据：正确率走势、各题型和各难度的正确率、用时。用来找出你平时最弱的地方。","ov.jump":"跳到",
+"ov.demoT":"<strong>示例数据</strong> · 下面是 6 次虚构模考。在“记录模考”里记下你的第一次模考后，就会换成你自己的数据。","ov.demoTBtn":"记录模考","ov.demoP":"<strong>示例数据</strong> · 下面是 3 周虚构的刷题记录。你刷完第一组题后，就会换成你自己的数据。",
+"pk.total":"练习题数","pk.totalSub":"{n} 组练习","pk.acc":"总正确率","pk.accSub":"LR {a} · RC {b}","pk.week":"近 7 天正确率","pk.weekVs":"比前 7 天","pk.weekNone":"近 7 天没有练习","pk.weekN":"{n} 题","pk.time":"平均每题用时","pk.timeSub":"目标 {t}","pk.weak":"最弱题型","pk.weakNone":"题还不够多",
+"pc.title":"正确率走势","pc.subDay":"按练习日统计","pc.subWeek":"按周统计","pc.all":"全部","pc.none":"还没有练习数据。",
+"pi.title":"平时最弱在哪","pi.sub":"根据逐题数据自动生成","pi.weak":"<b>{name}</b> 正确率 {p}%（{n} 题）","pi.weakD":"比你的平均低 {g} 个百分点。","pi.drop":"难度到<b>{d}</b>时正确率明显下降","pi.dropD":"从 {a}% 掉到 {b}%。先把{prev}题做稳，再多加难度。","pi.hardOk":"难题也能做对 {p}%","pi.hardOkD":"可以多刷难题。","pi.slow":"<b>{name}</b> 做得慢","pi.slowD":"平均每题 {t}，比目标慢 {s} 秒。","pi.trend":"最近 7 天正确率 {a}%","pi.trendUp":"比前 7 天高 {d} 个百分点。","pi.trendDown":"比前 7 天低 {d} 个百分点。","pi.imp":"进步最大：{name}","pi.impD":"正确率提高了 {d} 个百分点。","pi.none":"刷几组题后，这里会显示你的薄弱点。","pi.practice":"练这类 →",
+"pr.title":"日常练习 · 总正确率","pr.week":"近 7 天 {p}","pr.outer":"外环：总正确率","pr.inner":"内环：近 7 天","pt.title":"各题型正确率","pt.sub":"从低到高排列 · 少于 3 题的放在最后 · 箭头对比较早和较晚的一半题","pt.colType":"题型","pt.colAcc":"正确率","pt.colTime":"用时","pt.few":"题少","pt.none":"还没有这一科的刷题数据。","pt.go":"练","pt.n":"{n} 题",
+"pd.title":"难度与科目","pd.sub":"正确率 · 题数 · 平均用时","pd.diff":"按难度","pd.sec":"按科目","pd.reasons":"刷题错因","pd.noReasons":"做错时标一下原因，这里就会统计。",
+"side.foot":"<b>刷题快捷键</b><br>A–E 选择答案 · Enter 确认 / 下一题","s.title":"设置","s.lang":"语言 / Language","s.langSub":"界面、题型指南和示例题解析都会切换。导入的题目保持原文。","s.count":"每组默认题数","s.countSub":"刷题页的默认题数。","s.showType":"做题时显示题型","s.showTypeSub":"刷题时默认显示题型。想练识别题型就关掉。","s.pace":"每题目标用时","s.paceSub":"超过时计时器会变色。实考平均每题约 84 秒。","s.sec":"秒","s.autoAi":"导入时用 AI 补全","s.autoAiSub":"导入题目时，默认勾选用 AI 补全缺少的难度和题型。","s.export":"导出全部数据","s.exportSub":"把练习记录、题库和刷题统计导出成 JSON 文件，留作备份。","s.exportBtn":"导出 JSON","s.exported":"已导出","s.exportNo":"这里不能下载文件。","s.exportFail":"导出没有完成。","s.where":"数据保存在哪里","s.saved":"设置已保存"
+},
+en:{
+"app.title":"LSAT Error Analyzer","tab.overview":"Overview","tab.drill":"Practice","tab.guide":"Question types","tab.bank":"Question bank","tab.log":"Log a test","tab.history":"History","tab.prefs":"Settings",
+"st.connecting":"Connecting to your records…","st.slow":"<b>Can't reach your saved records yet.</b> Retrying automatically.","st.fail":"<b>Couldn't load your records ({c}).</b> Refresh the page to try again.","st.db":"Connected · your records and question bank are saved to your account, visible only to you","st.local":"Your records and question bank are saved in this browser",
+"c.cancel":"Cancel","c.all":"All","c.del":"Delete","c.confirmDel":"Confirm delete?","c.delFail":"Delete failed","c.unspecified":"Not specified","c.untagged":"Untagged","c.saving":"Saving…","c.saved":"Saved","c.saveFail":"Couldn't save. Try again.",
+"d.1":"Easy","d.2":"Medium","d.3":"Hard","d.0":"Unrated","d.mix":"Mixed",
+"k.PT":"Full PrepTest","k.Section":"Timed section","k.Drill":"Drill",
+"r.misread":"Misread","r.twoAns":"Down to two, picked wrong","r.concept":"Unclear on the logic","r.time":"Ran out of time","r.careless":"Careless","r.guess":"Guessed",
+"col.q":"Question","col.sec":"Section","col.type":"Type","col.diff":"Difficulty","col.ans":"Answer","col.tries":"Attempts","col.date":"Date","col.session":"Session","col.score":"Score","col.most":"Most missed",
+"ov.demo":"<strong>Sample data</strong> · These are 6 made-up practice tests that show how the analysis works. They're replaced with your own data after your first practice set or logged test.","ov.demoBtn":"Practice 10 questions",
+"ov.trend":"Score trend","ov.chartScore":"Scaled score","ov.chartAcc":"Accuracy","ov.subScore":"Scaled score · dashed line is your target","ov.subAcc":"Accuracy per session","ov.noScore":"Log a test with a scaled score to see your trend here.","ov.noAcc":"No accuracy data yet.","ov.target":"Target {n}",
+"ov.what":"What to work on","ov.whatSub":"Generated from where you miss questions","ov.weak":"Weakest question types","ov.weakSub":"Misses per session · arrows compare your recent half with the earlier half","ov.lr":"Logical Reasoning","ov.rc":"Reading Comp","ov.per":"{n}/session","ov.flat":"Flat","ov.noTypes":"No misses logged for this section yet.",
+"ov.reasons":"Why you miss","ov.reasonsSub":"Reasons across all misses","ov.noMiss":"No misses logged yet.","ov.targetLbl":"Target score","ov.targetPh":"e.g. 170","ov.targetMet":"Your last-3 average has reached your target","ov.targetGap":"About {n} points below your target",
+"kpi.last":"Latest test","kpi.noScore":"No scaled score yet","kpi.vs":"vs. last","kpi.avg3":"Last-3 average","kpi.best":"Best {n}","kpi.lr":"LR accuracy","kpi.rc":"RC accuracy","kpi.r3":"Last 3: {p}","kpi.sess":"Tests / misses","kpi.sessSub":"tests / missed questions",
+"in.lr":"In LR, focus on <b>{name}</b>","in.lrD":"{p}% of your LR misses, {n} per session on average.","in.next":"Next: {name}.","in.rc":"In RC, focus on <b>{name}</b>","in.rcD":"{n} misses per session on average.","in.how":"How to approach it →","in.reason":"Most common reason: <b>{r}</b>","in.reasonD":"{p}% of misses.","in.imp":"Biggest improvement: {name}","in.impD":"{n} fewer misses per session than before.","in.none":"Practice a few sets and suggestions will appear here.",
+"tip.misread":"Restate what the question asks in one line before reading the choices.","tip.twoAns":"When down to two, go back to the stimulus and find the word that rules one out.","tip.concept":"Review conditional reasoning (sufficient vs. necessary).","tip.time":"Do timed sections and skip anything that stalls you past 2 minutes; come back at the end.","tip.careless":"Mark words like not, except and least as you read.","tip.guess":"Review lucky guesses too; treat them as misses.",
+"h.title":"All records","h.count":"{n} sessions","h.empty":"No records yet. The overview is showing sample data.",
+"log.s1":"What did you practice","log.kind":"Type","log.source":"Source / ID","log.sourcePh":"e.g. PT 141","log.score":"Scaled score (optional)","log.s2":"How many correct","log.lr":"Logical Reasoning (both sections)","log.rc":"Reading Comprehension","log.zero":"Set the total to 0 for a section you skipped.","log.s3":"Misses: pick a reason, then tap the question type once per miss","log.lrTypes":"LR types","log.rcTypes":"RC types","log.logged":"{n} misses logged","log.notes":"Notes","log.notesPh":"e.g. Spent 12 minutes on the third RC passage (science)","log.save":"Save session","log.clear":"Clear","log.saved":"Saved. Overview updated.","log.errCount":"Correct answers can't exceed the total. Check step 2.","log.errEmpty":"Enter results for at least one section, or log a miss.","log.errQuota":"Storage is full. Delete some old records and try again.","log.errSave":"Couldn't save. Check your connection and try again.","log.remove":"Remove",
+"g.orderTitle":"Just starting? Learn in this order","g.orderSub":"LSAT question types fall into a few families. Questions in a family use the same way of thinking, so once you learn one, the rest get much easier.","g.cue":"Stem signals","g.how":"How to approach","g.trap":"Common trap: ","g.acc":"Practice accuracy {p}% ({n} attempts)","g.never":"Not practiced yet","g.missed":"{n} misses logged","g.pType":"Practice ({n})","g.pFam":"Practice this family ({n})",
+"o.1t":"Structure family","o.1d":"Learn to find the conclusion and separate the premises first. Everything else builds on this.","o.2t":"Assumption family","o.2d":"The biggest share of LR. The core skill is finding the gap between evidence and conclusion.","o.3t":"Inference family","o.3d":"The reverse mindset: don't critique the argument, only ask what can be strictly proved.","o.4t":"Paradox · Parallel","o.4d":"Practice these once the basics are solid. Many hard questions live here.","o.5t":"Reading Comp","o.5d":"Do 2 passages a week from the start, summarizing each paragraph as you read.",
+"dr.sample":"<strong>Sample bank</strong> · You're practicing on 17 original sample questions. <a href=\"#bank\">Import your own questions</a> and sets will draw from your bank.","dr.title":"Random practice","dr.sub":"Pick filters and draw random questions from your bank. Mixed difficulty balances easy, medium and hard.","dr.diff":"Difficulty","dr.sec":"Section","dr.type":"Type","dr.scope":"Scope","dr.count":"Questions","dr.allTypes":"All types","dr.whole":"All of {f}","dr.sAll":"All","dr.sNew":"Unseen","dr.sWrong":"Missed last time","dr.show":"Show the question type while answering (turn off to practice recognizing types)","dr.pool":"Matching: <b>{n}</b> questions","dr.dist":" (easy {a} · medium {b} · hard {c}{d})","dr.distU":" · unrated {n}","dr.short":"; fewer than {c}, so this set has {n}","dr.start":"Start {n} questions","dr.none":"No questions match. Try different filters.","dr.recent":"Recent sets","dr.recentSub":"Finished sets count toward your overview accuracy and weak areas","dr.noRecent":"No practice sets yet.","dr.src":"Random practice","dr.retry":"Retry missed",
+"q.of":"Question {i} of {n}","q.quit":"Quit set","q.quitC":"Quit this set?","q.confirm":"Submit","q.next":"Next","q.results":"See results","q.keys":"Keys: A–E to choose, Enter to submit","q.right":"Correct","q.wrong":"Incorrect · the answer is {L}","q.time":"Time {t}","q.untyped":"Type not tagged","q.howShort":"Approach: ","q.fullHow":"Full approach →","q.why":"Why did you miss it? (optional)","q.over":"Over your {t} target",
+"rs.line":"{p}% correct · total {t} · {a} per question","rs.note":"On the real LSAT, a 35-minute section has about 25 questions, roughly 1:24 each. Your target is {t} per question.","rs.saving":"Saving…","rs.saved":"Added to your overview and history.","rs.fail":"Couldn't save this set. Check your connection and refresh.","rs.again":"Another set","rs.redo":"Retry the {n} missed","rs.change":"Change filters","rs.where":"Where you missed","rs.perfect":"All correct. Try a harder set.","rs.n":"{n}","rs.how":"Approach","rs.review":"Question review","rs.ok":"Right","rs.no":"Wrong","rs.chose":"You: {c} · Answer: {a}",
+"b.banner":"<strong>Sample bank</strong> · You haven't imported any questions yet. Practice uses 17 original sample questions (13 LR, 4 RC) until you import your own.","b.import":"Import questions","b.importSub":"Upload a PDF, JSON or CSV file, or paste text or screenshots and AI will pull out the questions, types and difficulty.","b.tabFile":"Upload file","b.tabPaste":"Paste text","b.tabImg":"Screenshots","b.drop":"Drop a file here or choose one.","b.dropHint":".pdf · .json · .csv · .tsv · .txt (AI reads questions from PDF and txt)",
+"b.pdfPages":"Question pages","b.pdfKey":"Answer key pages (optional)","b.from":"from","b.to":"to","b.pdfNote":"If answers and explanations are at the back of the PDF, enter those pages as the answer key and AI will match them by question number. Up to 40 pages at a time; split a large PDF into several imports. Scanned PDFs are read as images, up to 12 pages at a time.","b.pdfGo":"Read these pages","b.pdfInfo":"{n} pages",
+"b.pastePh":"Paste questions with their answer choices (and answers, if you have them). Several questions at once is fine.","b.pasteGo":"Find questions","b.pasteAi":"AI will pick out questions, choices and answers, and tag type and difficulty.","b.pasteNoAi":"AI isn't available here, so only JSON or CSV can be pasted.","b.imgLead":"Upload screenshots or photos of questions, up to {n} at a time.","b.imgSub":"Every question in each image will be read.","b.stop":"Stop",
+"b.fmt":"File format","b.fmtBody":"The first CSV row is the header. <b>section</b> is LR or RC; <b>type</b> can be a code, an English name or a Chinese name (Flaw, Necessary Assumption, 必要假设); <b>difficulty</b> can be easy/medium/hard or a number from 1–5; <b>answer</b> is A–E. Difficulty and type can be blank and filled in by AI on import.","b.copyCsv":"Copy CSV template","b.copyJson":"Copy JSON template","b.copied":"Copied","b.selected":"Selected. Press Ctrl/⌘+C to copy.",
+"b.mine":"My question bank","b.sub":"{s}{n} questions · LR {lr} · RC {rc}","b.subSample":"Sample bank · ","b.aiFill":"AI-rate unrated questions ({n})","b.search":"Search question text","b.more":"Showing the first 100 of {n}. Use search to narrow it down.","b.none":"No questions match.","b.tries":"{n}×","b.lastWrong":"missed last","b.setMeta":"{n} questions · {d}","b.confirmSet":"Delete this whole bank?","b.aiRating":"AI is rating questions ({i}/{n})…","b.aiDone":"Done.",
+"m.reading":"Reading…","m.txtNoAi":"txt files need AI to read them, and AI isn't available here. Use JSON or CSV instead.","m.parseFail":"Couldn't read the file: {m}. Check it against the file format below.","m.noQs":"No questions found. Check the file format, or try Paste text so AI can read it.","m.noAns":"Found {n} questions, but they're missing answers or choices, so none can be imported. Make sure answers (A–E) are included.","m.ai":"AI is reading questions{p}… this usually takes 30–60 seconds","m.part":" (part {i} of {n})","m.imgPart":" ({a}–{b} of {n})","m.stopped":"Stopped.","m.pasteEmpty":"Paste some question text first.","m.pasteNoAi":"AI isn't available here. Format the questions as JSON or CSV to import them.",
+"m.pdfNoAi":"PDFs need AI to read the questions, and AI isn't available here. Format the questions as JSON or CSV instead.","m.pdfOpening":"Opening PDF…","m.pdfPwd":"This PDF is password-protected. Remove the password and upload it again.","m.pdfBad":"Couldn't open the PDF. The file may be damaged, or the PDF reader didn't load. Refresh and try again.","m.pdfRange":"Pages must be between 1 and {n}, and the first page can't be after the last.","m.pdf40":"Up to 40 pages at a time. Narrow the range and import in parts.","m.pdfKey":"The answer key page numbers aren't valid (10 pages at most).","m.pdfText":"Reading PDF text…","m.pdfScanNoImg":"This is a scanned PDF (no selectable text), so it has to be read as images, and images can't be sent to AI here.","m.pdfScan12":"This is a scanned PDF and is read as images, up to 12 pages at a time. Narrow the page range.","m.pdfConv":"Scanned PDF, converting page {n}…","m.pdfErr":"Something went wrong reading the PDF. Try a different page range.","m.pdfName":"{f} pp. {a}–{b}","m.paste":"Pasted questions","m.img":"Screenshot import","m.import":"Import {d}",
+"pv.title":"Review import","pv.sub":"Found {n} questions: {lr} LR, {rc} RC. Difficulty: easy {a} · medium {b} · hard {c} · unrated {u}.","pv.noAns":"{n} questions have no answer and were skipped.","pv.bad":"{n} entries were incomplete (missing question or choices) and were skipped.","pv.noType":"{n} questions have an unrecognized type.","pv.name":"Bank name","pv.ai":"Use AI to fill in missing difficulty and type before importing ({n} questions)","pv.more":"{n} more…","pv.unrec":"Not recognized","pv.go":"Import","pv.aiFilling":"AI is filling in difficulty and type ({i}/{n})…","pv.aiFail":" Importing with the information available.","pv.saving":"Saving ({i}/{n})…","pv.done":"Imported {n} questions.","pv.quota":"Storage is full. Delete an old bank and try again.","pv.fail":"Couldn't save. Check your connection and try again.","pv.unnamed":"Untitled bank",
+"ai.not_granted":"You haven't allowed this page to use Claude, so AI reading is off.","ai.sampling_disabled":"AI features aren't available on your account right now.","ai.rate_limited":"Too many AI requests, or you've hit a usage limit. Try again later.","ai.invalid_json":"AI returned an unexpected format. Try again; if it keeps failing, send fewer questions at a time.","ai.prompt_too_large":"Too much text at once. Import it in parts.","ai.refused":"AI declined this content. Try a different section.","ai.session_expired":"Your session expired. Sign in again.","ai.image_rejected":"That image couldn't be read. Try a PNG or JPG.","ai.other":"AI ran into a problem. Try again shortly.",
+"ov.testsTitle":"Practice tests","ov.testsSub":"Full PrepTests and timed sections: your score trend and the question types you miss most on tests.","ov.pracTitle":"Daily practice","ov.pracSub":"Question-by-question data from your practice sets: accuracy over time, accuracy by type and difficulty, and timing. Use it to find where you're weakest day to day.","ov.jump":"Jump to",
+"ov.demoT":"<strong>Sample data</strong> · These are 6 made-up practice tests. Log your first test and they'll be replaced with your own data.","ov.demoTBtn":"Log a test","ov.demoP":"<strong>Sample data</strong> · These are three weeks of made-up practice sets. Finish your first set and they'll be replaced with your own data.",
+"pk.total":"Questions practiced","pk.totalSub":"{n} sets","pk.acc":"Overall accuracy","pk.accSub":"LR {a} · RC {b}","pk.week":"Last 7 days","pk.weekVs":"vs. prior 7 days","pk.weekNone":"No practice in the last 7 days","pk.weekN":"{n} questions","pk.time":"Avg time per question","pk.timeSub":"Target {t}","pk.weak":"Weakest type","pk.weakNone":"Not enough data yet",
+"pc.title":"Accuracy trend","pc.subDay":"By practice day","pc.subWeek":"By week","pc.all":"All","pc.none":"No practice data yet.",
+"pi.title":"Where you're weakest","pi.sub":"Generated from your question-level data","pi.weak":"<b>{name}</b>: {p}% correct ({n} questions)","pi.weakD":"{g} points below your average.","pi.drop":"Accuracy drops at <b>{d}</b> difficulty","pi.dropD":"From {a}% to {b}%. Get {prev} questions solid before adding more difficulty.","pi.hardOk":"You get {p}% of hard questions right","pi.hardOkD":"Lean into harder sets.","pi.slow":"<b>{name}</b> is slow","pi.slowD":"{t} per question, {s} seconds over your target.","pi.trend":"Last 7 days: {a}% correct","pi.trendUp":"{d} points higher than the 7 days before.","pi.trendDown":"{d} points lower than the 7 days before.","pi.imp":"Most improved: {name}","pi.impD":"Up {d} points.","pi.none":"Practice a few sets and your weak spots will show up here.","pi.practice":"Practice these →",
+"pr.title":"Practice · overall accuracy","pr.week":"Last 7 days {p}","pr.outer":"Outer: overall","pr.inner":"Inner: last 7 days","pt.title":"Accuracy by question type","pt.sub":"Lowest first · types with fewer than 3 questions are listed last · arrows compare your earlier and later halves","pt.colType":"Type","pt.colAcc":"Accuracy","pt.colTime":"Time","pt.few":"few","pt.none":"No practice data for this section yet.","pt.go":"Practice","pt.n":"{n} questions",
+"pd.title":"Difficulty & section","pd.sub":"Accuracy · questions · avg time","pd.diff":"By difficulty","pd.sec":"By section","pd.reasons":"Why you missed (practice)","pd.noReasons":"Tag a reason when you miss a question and it'll be counted here.",
+"side.foot":"<b>Practice shortcuts</b><br>A–E to choose · Enter to submit / next","s.title":"Settings","s.lang":"Language / 语言","s.langSub":"Changes the interface, the question-type guide and sample explanations. Imported questions stay as written.","s.count":"Default questions per set","s.countSub":"Pre-selected on the Practice page.","s.showType":"Show question type","s.showTypeSub":"Show the type while answering by default. Turn off to practice recognizing types.","s.pace":"Target time per question","s.paceSub":"The timer changes color when you go over. The real test averages about 84 seconds.","s.sec":"sec","s.autoAi":"Fill gaps with AI on import","s.autoAiSub":"Pre-check the option to fill in missing difficulty and type with AI when importing.","s.export":"Export all data","s.exportSub":"Save your sessions, question bank and practice stats as a JSON backup.","s.exportBtn":"Export JSON","s.exported":"Exported","s.exportNo":"Downloads aren't available here.","s.exportFail":"The export didn't finish.","s.where":"Where your data is saved","s.saved":"Settings saved"
+}};
+const PREF_KEY="lsat-prefs-v1";
+let prefs={lang:"zh",count:10,showType:false,pace:84,autoAi:true};
+try{const p=JSON.parse(localStorage.getItem(PREF_KEY)||"null");if(p)prefs={...prefs,...p}}catch(e){}
+const t=(k,v)=>{let s=(I18N[prefs.lang]||I18N.zh)[k];if(s==null)s=I18N.zh[k]??k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s};
+const L=o=>o==null?"":typeof o==="string"?o:(o[prefs.lang]??o.zh);
+const $=s=>document.querySelector(s);
+function applyStatic(){
+  document.documentElement.lang=prefs.lang==="en"?"en":"zh-CN";
+  document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
+  document.querySelectorAll("[data-ih]").forEach(el=>el.innerHTML=t(el.dataset.ih));
+  document.querySelectorAll("[data-iph]").forEach(el=>el.placeholder=t(el.dataset.iph));
+  document.querySelectorAll("[data-ial]").forEach(el=>el.setAttribute("aria-label",t(el.dataset.ial)));
+  $("#orderList").innerHTML=[1,2,3,4,5].map(i=>`<li><b>${t("o."+i+"t")}</b><br><span class="tiny">${t("o."+i+"d")}</span></li>`).join("");
+}
+
+/* =================== taxonomy & guide =================== */
+const FAMILIES=[
+  {id:"struct",sec:"LR",name:{zh:"结构描述族",en:"Structure family"},desc:{zh:"不评价论证好坏，只描述它：结论是哪句、某句话起什么作用、用了什么方法、两个人在争什么。",en:"These don't judge the argument; they describe it: which sentence is the conclusion, what role a sentence plays, what method it uses, what two speakers disagree about."}},
+  {id:"assume",sec:"LR",name:{zh:"假设族",en:"Assumption family"},desc:{zh:"论证都有“缺口”：证据推不出结论。找假设、找漏洞、加强、削弱，本质都是在处理这个缺口。LR 里占比最高。",en:"Every argument has a gap: the evidence doesn't fully prove the conclusion. Assumption, flaw, strengthen and weaken questions all work on that gap. This is the largest share of LR."}},
+  {id:"infer",sec:"LR",name:{zh:"推断族",en:"Inference family"},desc:{zh:"把题干当成事实，选能被它支持的选项。和假设族方向相反：这里不批评题干，也不带入题干以外的信息。",en:"Treat the stimulus as fact and pick what it supports. The opposite direction from the assumption family: don't criticize the stimulus and don't bring in outside information."}},
+  {id:"paradox",sec:"LR",name:{zh:"解释矛盾",en:"Paradox"},desc:{zh:"题干给出两件看起来冲突的事实，你要找让两者能同时成立的解释。",en:"The stimulus gives two facts that seem to conflict. Find the explanation that lets both be true."}},
+  {id:"parallel",sec:"LR",name:{zh:"平行族",en:"Parallel family"},desc:{zh:"比较论证的“骨架”。题目长、耗时多，建议放在每节最后做。",en:"Compare the skeletons of arguments. These are long and time-consuming; consider saving them for the end of a section."}},
+  {id:"rcglobal",sec:"RC",name:{zh:"全局题",en:"Global questions"},desc:{zh:"关于整篇文章：主旨、结构、作者态度。读的时候每段写一句段意，这类题几乎就送分了。",en:"About the passage as a whole: main point, structure, the author's attitude. Summarize each paragraph in a line as you read and these become nearly free points."}},
+  {id:"rcdetail",sec:"RC",name:{zh:"细节与推断",en:"Detail & inference"},desc:{zh:"回原文定位。答案要么是原文的同义改写，要么是原文一步能推出的结论。",en:"Go back to the text. The answer is either a paraphrase of a line or something one step away from it."}},
+  {id:"rcfunc",sec:"RC",name:{zh:"作用与应用",en:"Function & application"},desc:{zh:"问“为什么写这句”或“原文的道理用到别处是什么样”。先抽象，再匹配。",en:"Why is this sentence here, or how would the passage's idea apply elsewhere? Abstract first, then match."}},
+  {id:"rccomp",sec:"RC",name:{zh:"比较阅读",en:"Comparative reading"},desc:{zh:"两篇短文。题目大多问两篇的关系：哪里一致、哪里分歧、各自会怎么看对方。",en:"Two short passages. Most questions ask about their relationship: where they agree, where they differ, how each would view the other."}}
+];
+const T=(sec,fam,k,zh,en,al,cue,hz,he,tz,te)=>({sec,fam,k,zh,en,al,cue,how:{zh:hz,en:he},trap:{zh:tz,en:te}});
+const TYPES=[
+ T("LR","struct","MP","主旨","Main Point",["mainpoint","mainconclusion","conclusion","主要结论","结论题"],"main conclusion / main point / most accurately expresses the conclusion",
+  ["圈出结论指示词（therefore, thus, so）和转折词（but, however）","对候选句子问“为什么？”：其他句子都在回答它，它就是主结论","用自己的话复述结论，再去选项里找同义表达"],
+  ["Circle conclusion indicators (therefore, thus, so) and pivots (but, however)","Ask \"why?\" of a candidate sentence: if the others answer it, it's the main conclusion","Restate the conclusion in your own words, then find its paraphrase among the choices"],
+  "把中间结论或前提当成主结论；注意 “Although X, Y” 结构里真正的观点通常是 Y。","Picking an intermediate conclusion or a premise. In \"Although X, Y\" the author's real point is usually Y."),
+ T("LR","struct","Role","作用","Role",["role","argumentpart","ap","角色","句子作用"],"plays which one of the following roles / figures in the argument in which way",
+  ["先找出主结论","判断题目问的这句是：前提、中间结论、反方观点，还是背景信息","逐字核对选项：选项的每个部分都要对"],
+  ["Find the main conclusion first","Decide what the sentence in question is: premise, intermediate conclusion, opposing view or background","Check every part of the choice word by word"],
+  "中间结论既被支持、又支持别的句子，最容易错判成前提或主结论。","Intermediate conclusions are both supported and supporting, so they're easy to mistake for a premise or the main conclusion."),
+ T("LR","struct","Method","推理方法","Method of Reasoning",["method","methodofreasoning","technique","argumentativetechnique","论证方法","方法"],"proceeds by / argumentative technique / responds to ... by",
+  ["用一句抽象的话描述论证在做什么（如：举反例、类比、排除其他可能）","把选项拆成几个部分，每部分对照原文"],
+  ["Describe in one abstract sentence what the argument does (counterexample, analogy, ruling out alternatives)","Break each choice into parts and match every part to the text"],
+  "选项前半句对、后半句说了原文没做的事。","The first half of a choice fits, but the second half describes something the argument never does."),
+ T("LR","struct","Disagree","争议点","Point at Issue",["disagree","pointatissue","pointofdisagreement","agree","分歧","同意"],"disagree over whether / committed to disagreeing about / agree that",
+  ["分别写出两人的结论","正确选项必须两人都表过态，而且态度相反","逐个选项问：A 怎么看？B 怎么看？"],
+  ["Write down each speaker's conclusion","The answer must be something both speakers take a position on, in opposite directions","For each choice ask: what would A say? What would B say?"],
+  "只有一个人提到的话题：另一个人没表态，就不算争议点。","A topic only one speaker mentions. If the other is silent on it, it isn't a point of disagreement."),
+ T("LR","assume","NA","必要假设","Necessary Assumption",["necessaryassumption","assumption","necessary","假设"],"depends on assuming / relies on the assumption / assumption required by",
+  ["分清证据和结论，找出结论里有、证据里没有的新概念","预判缺口：论证默认了什么？","否定测试：把选项否定，论证如果因此崩溃，就是答案"],
+  ["Separate evidence from conclusion and find the new idea that appears only in the conclusion","Predict the gap: what is the argument taking for granted?","Negation test: negate the choice; if the argument falls apart, that's the answer"],
+  "选项太强（充分但不必要），或带 all / never 这类绝对词。","Choices that are too strong (sufficient but not necessary), or that use absolutes like all or never."),
+ T("LR","assume","SA","充分假设","Sufficient Assumption",["sufficientassumption","sufficient","justify","justifytheconclusion","properlydrawn"],"if assumed, allows the conclusion to be properly drawn / conclusion follows logically if",
+  ["把论证翻译成条件链（A → B）","找出结论里凭空出现的概念","正确选项把证据里的概念直接连到这个新概念，让结论 100% 成立"],
+  ["Translate the argument into conditional chains (A → B)","Find the concept that appears out of nowhere in the conclusion","The answer links the evidence directly to that new concept so the conclusion is guaranteed"],
+  "箭头方向反了（逆命题），或选项只让结论“更可能”而不是“必然”。","Reversed arrows (the converse), or choices that only make the conclusion more likely rather than certain."),
+ T("LR","assume","Flaw","找缺陷","Flaw",["flaw","flawedreasoning","descriptiveflaw","vulnerabletocriticism","缺陷","漏洞","逻辑漏洞"],"flawed because / vulnerable to criticism on the grounds that / questionable because",
+  ["读完先自己说出漏洞，再看选项","对照常见漏洞：相关当因果、充分必要混淆、样本不具代表性、偷换概念、部分推整体、没有证据就当作反证","选项用抽象语言描述，逐词对回原文"],
+  ["Name the flaw yourself before reading the choices","Check common flaws: correlation as causation, sufficient vs. necessary, unrepresentative sample, shifting terms, part-to-whole, lack of evidence treated as proof against","Choices are abstract; map each word back to the argument"],
+  "选项描述的确实是一种错误，但这个论证并没有犯。","The choice describes a real logical error, just not one this argument commits."),
+ T("LR","assume","Strengthen","加强","Strengthen",["strengthen","支持"],"most strengthens / most strongly supports the argument / most justifies",
+  ["找缺口","选能补上缺口、让结论更可能成立的选项（不需要证明它）","因果论证：排除其他原因、显示有因必有果"],
+  ["Find the gap","Pick the choice that closes it and makes the conclusion more likely (it needn't prove it)","Causal arguments: rule out other causes, show the effect follows the cause"],
+  "只是重复或加强前提，没有碰到推理过程；或者跟结论的范围不一致。","Choices that only restate or bolster a premise without touching the reasoning, or that don't match the conclusion's scope."),
+ T("LR","assume","Weaken","削弱","Weaken",["weaken","undermine","castdoubt"],"most weakens / most seriously undermines / casts the most doubt",
+  ["找缺口","攻击从证据到结论的那一步，不是攻击证据本身","因果论证：提出其他原因、因果倒置、有因无果或无因有果"],
+  ["Find the gap","Attack the step from evidence to conclusion, not the evidence itself","Causal arguments: an alternative cause, reversed causation, cause without effect or effect without cause"],
+  "去质疑前提的真假（LSAT 默认前提为真）；拿无关群体做比较。","Questioning whether the premises are true (the LSAT treats them as true), or comparisons with an irrelevant group."),
+ T("LR","assume","Evaluate","评估","Evaluate",["evaluate","evaluation","mostusefultoknow"],"most useful to know / most helpful in evaluating",
+  ["找缺口","把选项当成一个问题，分别给出两个极端的回答","一个回答加强、另一个削弱，这个选项就是答案"],
+  ["Find the gap","Treat the choice as a question and answer it both ways","If one answer strengthens and the other weakens, that's the right choice"],
+  "两种回答都对结论没影响的问题。","Questions whose answer, either way, doesn't affect the conclusion."),
+ T("LR","assume","Principle","原则","Principle",["principle","principlejustify","principleconform","principleapply","原则题"],"principle ... most helps to justify / conforms to / is best illustrated by",
+  ["“帮助论证”型：当成充分假设做，找能推出结论的原则","“符合原则”型：当成推断做，把原则的每个条件逐一匹配到选项"],
+  ["\"Justify\" questions: treat like Sufficient Assumption and find the principle that yields the conclusion","\"Conform\" questions: treat like Inference and match every condition of the principle to the choice"],
+  "原则的条件只满足一半；把 only if（必要条件）当成 if（充分条件）。","Meeting only half of the principle's conditions, or treating only if (necessary) as if (sufficient)."),
+ T("LR","infer","MBT","必然推出","Must Be True",["mustbetrue","mbt","properlyinferred","inferencelr","必然为真","推断题"],"must also be true / can be properly inferred / follows logically from the statements",
+  ["题干一般没有结论，把每句当作事实","把条件陈述连成链，留意 some / most / all 这些量词","正确选项必须能被严格证明，不能只是“很可能”"],
+  ["There's usually no conclusion: treat every sentence as fact","Chain the conditionals and watch quantifiers like some / most / all","The answer must be provable, not just likely"],
+  "可能为真但不必然为真；带了题干没有的新信息。","Choices that could be true but aren't guaranteed, or that bring in new information."),
+ T("LR","infer","MSS","最强支持","Most Strongly Supported",["moststronglysupported","mss","bestsupported"],"most strongly supported by / provide the most support for",
+  ["做法同必然推出，标准稍宽","优先选措辞温和、范围窄、能直接在题干找到依据的选项"],
+  ["Approach like Must Be True with a slightly looser standard","Prefer soft wording and narrow scope that the stimulus directly supports"],
+  "说得太满（most, always）的选项；需要外部常识才能成立的选项。","Overstated choices (most, always) and choices that need outside knowledge."),
+ T("LR","infer","CBT","不可能为真","Cannot Be True",["cannotbetrue","mustbefalse","cbt","mbf","couldbetrueexcept"],"cannot be true / could be true EXCEPT / must be false",
+  ["问自己：哪个选项和题干直接矛盾？","四个错误选项都“可能为真”，只有答案“必然为假”"],
+  ["Ask: which choice contradicts the stimulus?","Four choices could be true; only the answer must be false"],
+  "把“题干没提到”当成“不可能”。没提到不等于矛盾。","Treating \"not mentioned\" as \"impossible.\" Unmentioned isn't contradicted."),
+ T("LR","paradox","Resolve","解释矛盾","Resolve the Paradox",["resolve","paradox","explain","resolvetheparadox","discrepancy","解释","矛盾"],"resolve the apparent discrepancy / helps to explain / reconcile",
+  ["用一句话写出矛盾：“为什么 X，却 Y？”","正确选项指出两件事其实有差别（时间、群体、衡量方式），让它们能同时成立","EXCEPT 题：四个选项都能解释，找那个不能解释的"],
+  ["State the paradox in one line: \"Why X, and yet Y?\"","The answer shows the two facts differ in some way (time, group, measurement) so both can be true","EXCEPT questions: four choices explain it; find the one that doesn't"],
+  "只解释了一边；或者反而让矛盾更大。","Explaining only one side, or deepening the conflict."),
+ T("LR","parallel","Parallel","平行推理","Parallel Reasoning",["parallel","parallelreasoning","平行"],"most similar in its reasoning / pattern of reasoning most similar",
+  ["抽象成结构：条件关系、量词、结论的确定程度","先比结论：结论类型（必然、可能、建议）不同的直接排除","再核对前提的结构"],
+  ["Abstract the structure: conditionals, quantifiers, how certain the conclusion is","Compare conclusions first; eliminate any of a different type (certain, likely, recommended)","Then check the structure of the premises"],
+  "话题相似但结构不同。永远只看结构，不看话题。","Same topic, different structure. Compare structure, never subject matter."),
+ T("LR","parallel","ParFlaw","平行缺陷","Parallel Flaw",["parallelflaw","flawedparallel","parallelflawedreasoning"],"flawed pattern of reasoning most similar to",
+  ["先把原题的漏洞说出来（同找缺陷题）","找犯了同样错误的选项，再检查结构是否一致"],
+  ["Name the original flaw first (as in a Flaw question)","Find the choice with the same flaw, then confirm the structure matches"],
+  "选项本身推理正确，或者犯的是另一种错误。","Choices whose reasoning is valid, or that commit a different flaw."),
+ T("RC","rcglobal","MainPt","主旨 / 目的","Main Point / Purpose",["mainpoint","mainidea","primarypurpose","purpose","主旨","目的"],"main point of the passage / primary purpose / central idea",
+  ["每读完一段写一句段意（3–6 个字也行）","结合作者自己的立场概括全文","答案要覆盖全文，不能只说一段"],
+  ["Write a one-line summary after each paragraph (a few words is fine)","Combine them with the author's own position","The answer must cover the whole passage, not one paragraph"],
+  "只覆盖某一段（太窄），或者超出文章范围（太宽）。","Too narrow (one paragraph) or too broad (beyond the passage)."),
+ T("RC","rcglobal","Structure","文章结构","Organization",["structure","organization","organizationofthepassage","结构"],"organization of the passage / structure of the passage",
+  ["拿你的段意列表对照选项，一段一段核对顺序"],["Compare your paragraph summaries against each choice, step by step"],
+  "顺序对，但某一步的描述不准（比如把“质疑”说成“否定”）。","The order is right but one step is described inaccurately (e.g. \"questions\" written as \"refutes\")."),
+ T("RC","rcglobal","Attitude","作者态度","Author's Attitude",["attitude","authorattitude","authorsattitude","tone","态度"],"author's attitude toward / the author would most likely describe ... as",
+  ["阅读时标出作者的评价词（remarkably, unfortunately, overstated）","分清作者自己的观点和文章转述的别人的观点"],
+  ["Mark the author's evaluative words as you read (remarkably, unfortunately, overstated)","Separate the author's view from views the author reports"],
+  "态度太极端。LSAT 的作者通常是温和的。","Attitudes that are too extreme. LSAT authors are usually measured."),
+ T("RC","rcdetail","Detail","细节","Detail",["detail","specificdetail","细节"],"according to the passage / the passage states / the author mentions",
+  ["回原文定位关键词","正确答案通常是原文的同义改写"],["Go back and locate the keywords in the passage","The answer is usually a paraphrase of the text"],
+  "原文出现过的词拼成了错误意思；或者答非所问。","Words from the passage stitched into a wrong meaning, or a true detail that doesn't answer the question."),
+ T("RC","rcdetail","Inference","推断","Inference",["inference","inferencerc","suggests","推断"],"suggests / it can be inferred / the author would most likely agree",
+  ["正确选项必须由原文支持，回去找能支持它的具体句子","标准同 LR 的最强支持题"],["The answer must be supported by the passage; find the sentence that supports it","Same standard as LR Most Strongly Supported"],
+  "常识上说得通，但原文没讲。","Makes sense in real life, but the passage never says it."),
+ T("RC","rcdetail","Vocab","词义","Meaning in Context",["vocab","vocabulary","wordincontext","meaning","词义"],"the word ... most nearly means / is used to mean",
+  ["只看上下文，不看字典意思","把选项代回原句，读通顺、意思不变才对"],["Use only the context, not the dictionary meaning","Substitute the choice into the sentence; it should read naturally with the same meaning"],
+  "选了这个词最常见的意思。","Picking the word's most common meaning."),
+ T("RC","rcfunc","Function","句子作用","Function",["function","purposeofreference","serves","作用"],"primarily in order to / serves to / the author mentions ... most likely to",
+  ["问：作者为什么在这里写这句？举例、反驳、让步，还是引出下文？","看它前后两句在说什么"],["Ask why the author wrote this sentence here: example, rebuttal, concession or setup?","Read the sentences just before and after"],
+  "选项复述了这句话的内容，却没说它的作用。","Choices that restate what the sentence says instead of what it does."),
+ T("RC","rcfunc","Application","应用","Application",["application","apply","应用"],"most likely to agree with which / which situation best exemplifies",
+  ["先把原文的原则或观点抽象成一句话","再到选项的情境里逐条匹配"],["Reduce the passage's principle or view to one sentence","Match it, condition by condition, to the situation in each choice"],
+  "情境和原文话题相同，但关系不同。","Same topic as the passage, but a different relationship."),
+ T("RC","rcfunc","Analogy","类比","Analogy",["analogy","analogous","类比"],"most analogous to / relationship most similar to",
+  ["抽象出关系结构（谁对谁做了什么，结果如何）","忽略话题，只比结构"],["Abstract the relationship (who did what to whom, with what result)","Ignore the topic and compare structure only"],
+  "被相似的话题吸引。","Being drawn in by a similar topic."),
+ T("RC","rcfunc","StrWk","加强 / 削弱","Strengthen / Weaken",["strengthen","weaken","strengthenweaken","加强","削弱"],"would most strengthen / most undermine the claim that",
+  ["先锁定被加强或削弱的是哪个人的哪个观点","做法同 LR"],["First pin down whose claim, and which claim, is being strengthened or weakened","Then approach it as in LR"],
+  "加强了另一个人的观点。","Strengthening a different person's view."),
+ T("RC","rccomp","Comparative","比较阅读","Comparative Reading",["comparative","comparativereading","比较"],"Passage A ... Passage B / both authors / the relationship between",
+  ["两篇各写一句主旨","列出一致点和分歧点","每道题都问：这是 A 的观点，还是 B 的？"],["Write a one-line main point for each passage","List where they agree and where they differ","For every question ask: is this A's view or B's?"],
+  "把 A 的观点安到 B 头上；“两篇都提到”的选项其实只有一篇提了。","Attributing A's view to B, or a choice \"both passages mention\" that only one does.")
+];
+const TYPE_BY={};TYPES.forEach(x=>TYPE_BY[x.sec+":"+x.k]=x);
+const typesOf=sec=>TYPES.filter(x=>x.sec===sec);
+const tName=(sec,k)=>{const x=TYPE_BY[sec+":"+k];return x?(prefs.lang==="en"?x.en:x.zh):""};
+const tSub=(sec,k)=>{const x=TYPE_BY[sec+":"+k];return x&&prefs.lang!=="en"?x.en:""};
+const REASON_KEYS=["misread","twoAns","concept","time","careless","guess"];
+const rName=k=>REASON_KEYS.includes(k)?t("r."+k):t("c.unspecified");
+const dName=d=>t("d."+(d||0));
+const famName=id=>L(FAMILIES.find(f=>f.id===id)?.name);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const locale=()=>prefs.lang==="en"?"en-US":"zh-CN";
+const fmtTime=ms=>{const s=Math.round(ms/1000);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+
+/* =================== sample data =================== */
+function sampleRecords(){
+  const plan=[["2026-08-09","PT 136",156,38,17],["2026-08-23","PT 137",158,40,18],["2026-09-06","PT 138",161,42,19],["2026-09-20","PT 139",160,41,20],["2026-10-04","PT 140",164,44,20],["2026-10-18","PT 141",166,45,21]];
+  const lrPool=["Flaw","Flaw","NA","NA","SA","Parallel","Parallel","Weaken","MSS","Principle","Resolve","Method","Strengthen"];
+  const rcPool=["Inference","Inference","Structure","Comparative","Function","Detail","Attitude"];
+  const rs=["misread","twoAns","twoAns","concept","time","careless"];
+  let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  return plan.map(([date,source,score,lrc,rcc],i)=>{
+    const misses=[];
+    for(let j=0;j<51-lrc;j++)misses.push({s:"LR",t:lrPool[Math.floor(rnd()*lrPool.length)],r:rs[Math.floor(rnd()*rs.length)]});
+    for(let j=0;j<27-rcc;j++)misses.push({s:"RC",t:rcPool[Math.floor(rnd()*rcPool.length)],r:i<3?"time":rs[Math.floor(rnd()*rs.length)]});
+    return {id:"sample"+i,date,kind:"PT",source,score,lrc,lrt:51,rcc,rct:27,misses,notes:""};
+  });
+}
+const RC_PASSAGE="For decades, economists assumed that informal savings groups—rotating associations in which members contribute a fixed sum each week and take turns receiving the pooled amount—persisted in developing economies only because formal banks were unavailable. On this view, the groups were a stopgap that would disappear once banking became accessible.\n\nYet researchers studying neighborhoods where banks have operated for years have found such groups thriving. Members, when interviewed, rarely cite a lack of bank access. Instead, they describe the weekly meeting as a commitment device: the expectation of contributing in front of neighbors helps them save money they would otherwise spend.\n\nSome economists have responded that the groups survive merely out of habit. But this explanation struggles to account for the fact that new groups continue to form among young people with no prior experience of them. The evidence suggests that the groups meet a need that formal banking, however accessible, does not.";
+const SAMPLE_BANK=[
+ {id:"s01",sec:"LR",t:"NA",d:1,stim:"The city plans to install lights along the lakeside path to reduce nighttime thefts there. Officials argue that better lighting will make would-be thieves easier for patrol officers to spot, and so will deter theft.",q:"The officials' argument depends on assuming which one of the following?",ch:["Most thefts in the city occur along the lakeside path.","Patrol officers will continue to patrol the lakeside path at night.","Lighting is the least expensive way to reduce thefts.","Thieves never operate in well-lit areas.","The number of thefts along the path has increased in recent years."],a:1,
+  ex:{zh:"否定 B：晚上没有巡逻员了。那么“照明让巡逻员更容易发现小偷”就落空，论证崩溃，所以 B 是必要假设。D 太绝对，属于充分而非必要。",en:"Negate B: no patrols at night. Then lighting that makes thieves easier for patrol officers to spot accomplishes nothing and the argument collapses, so B is required. D is too absolute: sufficient, not necessary."}},
+ {id:"s02",sec:"LR",t:"Flaw",d:1,stim:"Every member of the debate team who practiced daily last season won at least one tournament. Marisol won a tournament last season. Therefore, Marisol must have practiced daily.",q:"The reasoning in the argument is flawed because the argument",ch:["treats a condition sufficient for winning a tournament as if it were necessary","relies on the testimony of an unreliable source","generalizes from a single unrepresentative case","assumes that what is true of a team is true of each of its members","presumes without justification that winning causes daily practice"],a:0,
+  ex:{zh:"题干是“每天练 → 获奖”，却从“获奖”倒推“每天练”。这是把充分条件当成必要条件，属于典型的逆命题错误。",en:"The stimulus says practiced daily → won. The argument runs it backward from won to practiced daily, treating a sufficient condition as necessary (the converse error)."}},
+ {id:"s03",sec:"LR",t:"Weaken",d:2,stim:"Residents of Harlow who drink green tea daily report fewer colds than residents who do not. A local health blog concludes that compounds in green tea strengthen the immune system.",q:"Which one of the following, if true, most seriously weakens the blog's conclusion?",ch:["Green tea contains several compounds that have been studied in laboratories.","Some residents who drink green tea daily still catch colds.","Daily green tea drinkers in Harlow are far more likely than others to exercise regularly and sleep well, habits known to reduce colds.","Green tea is more expensive in Harlow than most other beverages.","The author of the blog drinks green tea daily."],a:2,
+  ex:{zh:"相关不等于因果。C 提出了另一个原因（运动和睡眠），削弱了“是绿茶起作用”的结论。B 只是例外，不影响整体趋势。",en:"Correlation isn't causation. C offers another cause (exercise and sleep), weakening the claim that tea is responsible. B is just an exception and doesn't affect the overall pattern."}},
+ {id:"s04",sec:"LR",t:"Strengthen",d:2,stim:"A bakery switched from paper bags to reusable cloth bags last spring and has since seen its monthly packaging costs fall by 30 percent. The owner concludes that the switch to cloth bags caused the drop in costs.",q:"Which one of the following, if true, most strengthens the owner's conclusion?",ch:["Customers say they prefer the cloth bags.","The bakery's sales volume and the prices it pays for its other packaging materials stayed the same over this period.","Several nearby bakeries still use paper bags.","Cloth bags are better for the environment than paper bags.","The owner had considered making the switch for several years."],a:1,
+  ex:{zh:"B 排除了其他可能原因（销量下降、其他包材降价），让“换袋子导致成本下降”更可信。",en:"B rules out other explanations (lower sales, cheaper other packaging), making it more believable that switching bags caused the savings."}},
+ {id:"s05",sec:"LR",t:"MBT",d:2,stim:"All of the paintings in the east gallery are on loan from private collectors. None of the works on loan from private collectors may be photographed. Some of the paintings in the east gallery were painted before 1900.",q:"If the statements above are true, which one of the following must also be true?",ch:["Some paintings that were painted before 1900 may not be photographed.","All paintings painted before 1900 are on loan from private collectors.","No painting in the west gallery may be photographed.","Every work that may not be photographed is in the east gallery.","Some works on loan from private collectors were painted after 1900."],a:0,
+  ex:{zh:"东馆 → 借展 → 不可拍照。东馆里有些画是 1900 年前的，所以这些画不可拍照，A 必然成立。E 可能为真，但不必然。",en:"East gallery → on loan → can't be photographed. Some east-gallery paintings predate 1900, so those can't be photographed: A must be true. E could be true but isn't guaranteed."}},
+ {id:"s06",sec:"LR",t:"MP",d:1,stim:"Many people believe that reading on screens harms comprehension. However, the studies they cite mostly tested readers unfamiliar with digital devices. Recent studies of readers who grew up with screens find no comprehension gap. So the belief that screen reading inherently harms comprehension is unwarranted.",q:"Which one of the following most accurately expresses the main conclusion of the argument?",ch:["Readers unfamiliar with digital devices comprehend less on screens.","The claim that reading on screens inherently harms comprehension lacks adequate support.","Recent studies are more reliable than older studies.","People who grew up with screens read more than other people.","Many people hold mistaken beliefs about reading."],a:1,
+  ex:{zh:"“So” 后面就是结论：认为屏幕阅读本身有害的观点没有根据。B 是它的同义改写。E 太宽。",en:"The conclusion follows \"So\": the belief that screen reading inherently harms comprehension is unwarranted. B paraphrases it. E is too broad."}},
+ {id:"s07",sec:"LR",t:"SA",d:3,stim:"Anyone who qualifies for the senior fellowship has published at least two peer-reviewed papers. Dr. Okafor has published only one peer-reviewed paper. Therefore, Dr. Okafor will not be invited to the annual retreat.",q:"The conclusion follows logically if which one of the following is assumed?",ch:["Anyone invited to the annual retreat qualifies for the senior fellowship.","Anyone who qualifies for the senior fellowship is invited to the annual retreat.","Dr. Okafor will publish another paper next year.","Most people invited to the retreat have published several papers.","Anyone who has published two peer-reviewed papers is invited to the retreat."],a:0,
+  ex:{zh:"条件链：受邀 → 符合资格 → 至少两篇论文。Okafor 不满足最后一环，倒推出他不受邀。A 补上了“受邀 → 符合资格”。B 方向反了。",en:"Chain: invited → qualifies → at least two papers. Okafor fails the last link, so he isn't invited. A supplies invited → qualifies. B reverses the arrow."}},
+ {id:"s08",sec:"LR",t:"Parallel",d:2,stim:"If the bridge is closed, the ferry will be crowded. If the ferry is crowded, commuters will be late. The bridge is closed, so commuters will be late.",q:"Which one of the following arguments is most similar in its pattern of reasoning to the argument above?",ch:["If it rains, the game will be postponed. If the game is postponed, the stadium will refund tickets. It rained, so the stadium will refund tickets.","If it rains, the game will be postponed. The game was postponed, so it rained.","If the oven is hot, the bread rises, and if the bread rises, it sells. The bread sold, so the oven was hot.","Whenever prices rise, sales fall. Sales fell, so prices must have risen.","If the library opens late, students study at home. Some students studied at home, so the library opened late."],a:0,
+  ex:{zh:"原题结构：A→B，B→C，A，所以 C。只有选项 A 完全相同。其余选项都是从结果倒推原因（逆命题错误）。",en:"Original structure: A→B, B→C, A, therefore C. Only choice A matches. The others reason backward from result to cause (the converse error)."}},
+ {id:"s09",sec:"LR",t:"Resolve",d:2,stim:"After a town replaced stop signs with roundabouts at several intersections, the number of reported collisions at those intersections rose. Yet the number of serious injuries from collisions at those intersections fell sharply.",q:"Which one of the following, if true, most helps to resolve the apparent discrepancy described above?",ch:["Roundabouts are more expensive to build than stop signs.","Collisions at roundabouts tend to be low-speed glancing impacts, whereas collisions at stop-sign intersections more often involve high-speed side impacts.","Many drivers found the roundabouts confusing at first.","The town also replaced stop signs at intersections that were not converted to roundabouts.","The number of vehicles using these intersections stayed roughly the same."],a:1,
+  ex:{zh:"矛盾：事故多了，重伤却少了。B 说明事故的类型变了（低速擦碰），两件事就能同时成立。C 只解释了事故增多那一边。",en:"The paradox: more collisions but fewer serious injuries. B shows the type of collision changed (low-speed glancing), so both facts can be true. C explains only the rise in collisions."}},
+ {id:"s10",sec:"LR",t:"Role",d:3,stim:"Some critics argue that the new zoning law will drive up rents. But this concern is misplaced. The law permits more housing units on each lot, and an increase in housing supply tends to restrain rents. Admittedly, construction will take years. Still, over the long term, the law is likely to make housing more affordable.",q:"The claim that an increase in housing supply tends to restrain rents plays which one of the following roles in the argument?",ch:["It is the argument's main conclusion.","It is a premise offered in support of the argument's overall conclusion.","It is a consideration that the argument concedes counts against its conclusion.","It is the critics' view, which the argument rejects.","It is an intermediate conclusion supported by the claim that construction will take years."],a:1,
+  ex:{zh:"这句和“法律允许每块地建更多住房”一起，支持“批评者的担忧是错的、长期会更便宜”。它是前提。C 描述的是“建设需要多年”那句让步。",en:"Together with the point that the law permits more units per lot, this supports the conclusion that the critics are wrong and housing will become more affordable. It's a premise. C describes the concession about construction time."}},
+ {id:"s11",sec:"LR",t:"Disagree",d:1,stim:"Lena: The museum should charge admission. The revenue would fund new exhibits, which would attract more visitors.\n\nRaj: Charging admission would exclude low-income families, and a public museum's first duty is to be accessible to everyone. The museum should keep free entry.",q:"Lena and Raj disagree over whether",ch:["new exhibits would attract more visitors","the museum should charge admission","a public museum's first duty is accessibility","low-income families currently visit the museum","the museum needs new exhibits"],a:1,
+  ex:{zh:"两人都明确表态、而且态度相反的只有“是否收门票”。其他选项都只有一个人提到。",en:"The only issue both take a clear, opposite position on is whether to charge admission. Every other choice is mentioned by only one speaker."}},
+ {id:"s12",sec:"LR",t:"Principle",d:2,stim:"Principle: A journalist should withhold a source's name only if revealing it would put the source at risk and the information the source provided can be independently verified.",q:"Which one of the following judgments most closely conforms to the principle above?",ch:["Kim withheld her source's name because the source asked her to, even though the source faced no risk.","Ortiz withheld his source's name; revealing it would have endangered the source, and the documents the source provided were confirmed by two other parties.","Patel withheld a source's name because revealing it would endanger the source, although none of the source's claims could be verified.","Diaz withheld a source's name even though the source's information could not be checked by anyone.","Moore withheld a source's name because she thought it would make her story more intriguing."],a:1,
+  ex:{zh:"“only if” 后面是两个必要条件：有风险，并且可以独立核实。只有 B 两个条件都满足，其他选项都至少缺一个。",en:"\"Only if\" introduces two necessary conditions: risk to the source and independent verification. Only B meets both; every other choice misses at least one."}},
+ {id:"s13",sec:"LR",t:"Weaken",d:3,stim:"Archaeologists found that pottery from the lower layer of an excavation site is far more finely made than pottery from the upper layer. They conclude that the site's later inhabitants had lost the pottery-making skills of their predecessors.",q:"Which one of the following, if true, most seriously weakens the archaeologists' conclusion?",ch:["Finely made pottery generally takes longer to produce than coarse pottery.","Other sites in the region show a similar decline in pottery quality over time.","The upper layer contains more pottery fragments than the lower layer does.","The lower-layer pottery comes mostly from burial chambers, where people placed their finest wares, while the upper-layer pottery comes mainly from household refuse.","The site was continuously inhabited by the same population."],a:3,
+  ex:{zh:"D 说明两层的样本不可比：一边是陪葬精品，一边是日用垃圾。质量差异不能证明技艺失传。B 反而加强。",en:"D shows the two layers aren't comparable samples: fine burial wares versus everyday refuse. The quality gap doesn't prove lost skill. B actually strengthens the conclusion."}},
+ {id:"s14",sec:"RC",t:"MainPt",d:2,stim:RC_PASSAGE,q:"Which one of the following most accurately expresses the main point of the passage?",ch:["Informal savings groups persist because they serve a function that formal banks do not, rather than merely substituting for unavailable banks.","Informal savings groups are more efficient than formal banks at helping people save.","Economists have generally ignored informal savings groups.","Young people are increasingly forming informal savings groups.","Formal banks should adopt the practices of informal savings groups."],a:0,
+  ex:{zh:"第一段提出旧观点（只是银行的替代品），后两段反驳它，最后一句是作者结论。A 覆盖了全文。D 只是第三段的一个细节。",en:"Paragraph 1 states the old view (the groups merely substitute for banks); the rest rebuts it, ending with the author's conclusion. A covers the whole passage. D is a detail from paragraph 3."}},
+ {id:"s15",sec:"RC",t:"Detail",d:1,stim:RC_PASSAGE,q:"According to the passage, members of informal savings groups in areas with banks most often explain their participation by referring to",ch:["the higher returns the groups provide","the lack of nearby banks","the social expectation that helps them save","a family tradition of membership","their distrust of formal banks"],a:2,
+  ex:{zh:"第二段：成员把每周聚会看作一种承诺机制，当着邻居的面存钱，帮助他们存下本来会花掉的钱。C 是同义改写。",en:"Paragraph 2: members describe the weekly meeting as a commitment device, saving in front of neighbors. C paraphrases that."}},
+ {id:"s16",sec:"RC",t:"Function",d:2,stim:RC_PASSAGE,q:"The author mentions that members \"rarely cite a lack of bank access\" primarily in order to",ch:["challenge the assumption that the groups exist only as a substitute for banks","show that formal banks are unpopular in these neighborhoods","explain how the groups distribute pooled funds","support the view that the groups survive out of habit","suggest that members misunderstand their own motives"],a:0,
+  ex:{zh:"这句话的作用是反驳第一段的旧观点：如果只是因为缺银行才参加，成员应该会提到缺银行。",en:"The line rebuts the old view from paragraph 1: if members joined only because banks were missing, they'd say so."}},
+ {id:"s17",sec:"RC",t:"Inference",d:3,stim:RC_PASSAGE,q:"It can be inferred from the passage that the author regards the formation of new groups among young people with no prior experience of them as",ch:["evidence that banks have become less accessible","difficult to reconcile with the view that the groups persist only out of habit","a temporary trend that is unlikely to continue","proof that the groups are more profitable than banks","irrelevant to the debate about why the groups persist"],a:1,
+  ex:{zh:"第三段：“习惯说”很难解释从没参加过的年轻人为什么还在组建新团体。B 正是这个意思。D 用 proof，太绝对。",en:"Paragraph 3: the habit explanation can't account for inexperienced young people forming new groups. B says exactly that. D's \"proof\" is too strong."}}
+];
+
+/* =================== state & storage =================== */
+const state={records:[],target:null,chunks:[],qstats:{},demo:true,mode:"loading",chart:"score",sec:"LR",ai:null,aiImg:0,dl:null,statusKey:"st.connecting",statusVars:null};
+let store=null;
+const LS_KEY="lsat-analysis-v1";
+function lsRead(){try{const d=JSON.parse(localStorage.getItem(LS_KEY)||"null")||{};return {records:d.records||[],target:d.target??null,bank:d.bank||[],stats:d.stats||{}}}catch(e){return {records:[],target:null,bank:[],stats:{}}}}
+function lsWrite(d){try{localStorage.setItem(LS_KEY,JSON.stringify(d));return true}catch(e){return false}}
+let wq=Promise.resolve();
+function serial(fn){const p=wq.then(fn);wq=p.catch(()=>{});return p}
+function setStatus(k,v){state.statusKey=k;state.statusVars=v;$("#status").innerHTML=k?t(k,v):"";const w=$("#prefWhere");if(w)w.textContent=state.mode==="db"?t("st.db"):state.mode==="local"?t("st.local"):"…"}
+
+async function initStore(){
+  let db=null,user=null,ai=null,dl=null,uid=null;
+  try{ if(window.claude&&window.claude.use){[db,user,ai,dl]=await Promise.all(["db","user","sample","downloads"].map(n=>window.claude.use(n))); uid=user?await user.id():null;} }catch(e){}
+  state.ai=ai;state.dl=dl;
+  if(ai){try{const lim=await ai.limits();state.aiImg=lim?.images?.maxCount||0}catch(e){state.aiImg=0}}
+  if(db&&uid){
+    const profile=db.doc("data/users/"+uid+"/profile");
+    const tests=profile.collection("tests"),bank=profile.collection("bank"),stats=db.doc("data/users/"+uid+"/qstats"),settings=db.doc("data/users/"+uid+"/settings");
+    store={
+      add:r=>serial(()=>{const {id,...b}=r;return tests.doc(id).set(b)}),
+      remove:id=>serial(()=>tests.doc(id).delete()),
+      setTarget:v=>serial(()=>profile.set({target:v})),
+      putChunk:c=>serial(()=>{const {id,...b}=c;return bank.doc(id).set(b)}),
+      delChunk:id=>serial(()=>bank.doc(id).delete()),
+      setStats:s=>serial(()=>stats.set({s})),
+      setPrefs:p=>serial(()=>settings.set({...p}))
+    };
+    state.mode="db";
+    let timer=setTimeout(()=>setStatus("st.slow"),10000);
+    const fail=err=>{clearTimeout(timer);setStatus("st.fail",{c:esc(err.code)})};
+    tests.onSnapshot(snap=>{
+      if(!snap.metadata.fromCache){clearTimeout(timer);setStatus("st.db")}
+      state.records=snap.docs.map(d=>({id:d.id,...d.data()}));render();if(!quiz&&viewIs("drill"))renderDrill();
+    },fail);
+    bank.onSnapshot(snap=>{state.chunks=snap.docs.map(d=>({id:d.id,...d.data()}));renderBankAll();renderGuide();if(!quiz)renderDrill()},fail);
+    profile.onSnapshot(s=>{state.target=s.exists?(s.data().target??null):null;render()},()=>{});
+    stats.onSnapshot(s=>{state.qstats=s.exists?(s.data().s||{}):{};renderBankList();renderGuide();if(!quiz)renderDrill()},()=>{});
+    settings.onSnapshot(s=>{if(!s.exists)return;const next={...prefs,...s.data()};const langChanged=next.lang!==prefs.lang;
+      prefs=next;try{localStorage.setItem(PREF_KEY,JSON.stringify(prefs))}catch(e){}
+      syncDrillDefaults();if(langChanged)rerenderAll();else{renderPrefs();if(!quiz)renderDrill()}},()=>{});
+  }else{
+    const d=lsRead();
+    const save=fn=>{const x=lsRead();fn(x);if(!lsWrite(x))return Promise.reject({code:"quota_exceeded"});state.records=x.records;state.target=x.target;state.chunks=x.bank;state.qstats=x.stats;render();renderBankAll();renderGuide();return Promise.resolve()};
+    store={
+      add:r=>save(x=>x.records.push(r)),
+      remove:id=>save(x=>x.records=x.records.filter(r=>r.id!==id)),
+      setTarget:v=>save(x=>x.target=v),
+      putChunk:c=>save(x=>{x.bank=x.bank.filter(b=>b.id!==c.id);x.bank.push(c)}),
+      delChunk:id=>save(x=>x.bank=x.bank.filter(b=>b.id!==id)),
+      setStats:s=>save(x=>x.stats=s),
+      setPrefs:()=>Promise.resolve()
+    };
+    state.records=d.records;state.target=d.target;state.chunks=d.bank;state.qstats=d.stats;state.mode="local";
+    setStatus("st.local");
+  }
+  rerenderAll();
+}
+
+/* bank accessors */
+function userQuestions(){return state.chunks.slice().sort((a,b)=>(a.at||0)-(b.at||0)||(a.part||0)-(b.part||0)).flatMap(c=>(c.qs||[]).map(q=>({...q,_c:c.id,_set:c.set})))}
+function bankQs(){const u=userQuestions();return u.length?u:SAMPLE_BANK}
+const usingSampleBank=()=>userQuestions().length===0;
+
+/* =================== overview =================== */
+const pct=(c,n)=>n>0?c/n:null;
+const fmtPct=v=>v==null?"—":Math.round(v*100)+"%";
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const byDate=(a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.createdAt||0)-(b.createdAt||0);
+const isoLocal=d=>new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+const addDays=(iso,n)=>{const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()+n);return isoLocal(d)};
+const today=()=>isoLocal(new Date());
+function weekStart(iso){const d=new Date(iso+"T12:00:00");const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd);return isoLocal(d)}
+function testsData(){const real=state.records.filter(r=>r.kind!=="Drill");state.demoT=!real.length&&state.mode!=="loading";return (real.length?real:sampleRecords()).slice().sort(byDate)}
+function practiceData(){const real=state.records.filter(r=>r.kind==="Drill");state.demoP=!real.length&&state.mode!=="loading";return (real.length?real:samplePractice()).slice().sort(byDate)}
+const data=testsData;
+
+/* sample practice: three weeks of made-up drill sets */
+let _samplePractice=null;
+function samplePractice(){
+  if(_samplePractice&&_samplePractice.day===today())return _samplePractice.recs;
+  const base={MP:.85,Role:.7,Method:.68,Disagree:.8,NA:.6,SA:.45,Flaw:.5,Strengthen:.68,Weaken:.64,Evaluate:.6,Principle:.62,MBT:.66,MSS:.7,CBT:.72,Resolve:.72,Parallel:.42,ParFlaw:.4,
+    MainPt:.8,Structure:.72,Attitude:.75,Detail:.8,Inference:.55,Vocab:.85,Function:.62,Application:.58,Analogy:.55,StrWk:.6,Comparative:.5};
+  const lrPool=["Flaw","Flaw","NA","NA","SA","Strengthen","Weaken","Weaken","MBT","MSS","MP","Role","Method","Principle","Parallel","ParFlaw","Resolve","Disagree","Evaluate","CBT"];
+  const rcPool=["MainPt","Detail","Inference","Inference","Function","Attitude","Structure","Comparative","Application","StrWk"];
+  const slow={Parallel:1.6,ParFlaw:1.6,SA:1.25,Comparative:1.4,Principle:1.2};
+  let seed=11;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const offs=[-23,-22,-20,-18,-17,-15,-13,-12,-10,-8,-7,-6,-4,-3,-1,0];
+  const recs=offs.map((o,si)=>{
+    const date=addDays(today(),o),prog=si/offs.length;
+    const items=[];
+    for(let j=0;j<10;j++){
+      const s=rnd()<0.7?"LR":"RC";const k=(s==="LR"?lrPool:rcPool)[Math.floor(rnd()*(s==="LR"?lrPool:rcPool).length)];
+      const d=rnd()<0.33?1:rnd()<0.6?2:3;
+      const p=Math.min(.97,Math.max(.1,base[k]+(d===1?.15:d===3?-.2:0)+prog*.12));
+      const ok=rnd()<p;const ms=Math.round((48+rnd()*48)*(slow[k]||1)*(d===3?1.2:1)*1000*(s==="RC"?1.15:1));
+      items.push({id:"sp"+si+"-"+j,ok,ms,d,t:k,s});
+    }
+    const lr=items.filter(x=>x.s==="LR"),rc=items.filter(x=>x.s==="RC");
+    const rs=["misread","twoAns","twoAns","concept","time","careless","other"];
+    return {id:"samplep"+si,date,kind:"Drill",source:"Sample",createdAt:new Date(date+"T19:00:00").getTime(),
+      lrc:lr.filter(x=>x.ok).length,lrt:lr.length,rcc:rc.filter(x=>x.ok).length,rct:rc.length,
+      misses:items.filter(x=>!x.ok).map(x=>({s:x.s,t:x.t,r:rs[Math.floor(rnd()*rs.length)]})),quiz:{items}};
+  });
+  _samplePractice={day:today(),recs};return recs;
+}
+
+function render(){
+  const T=testsData();
+  $("#sampleBanner").hidden=!state.demoT;
+  renderKpis(T);renderChart(T);renderTypes(T);renderReasons(T);renderInsights(T);
+  renderPractice();renderHistory();
+  const el=$("#target");if(document.activeElement!==el)el.value=state.target??"";
+}
+
+/* generic line chart */
+function drawLines(el,{cats,series,yMin,yMax,ticks,fmt,ref,area}){
+  const W=640,H=230,P={l:40,r:16,t:16,b:30};
+  const xs=c=>cats.length===1?(P.l+W-P.r)/2:P.l+cats.indexOf(c)*(W-P.l-P.r)/(cats.length-1);
+  const ys=v=>P.t+(yMax-v)*(H-P.t-P.b)/(yMax-yMin);
+  let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">`;
+  ticks.forEach(v=>{s+=`<line x1="${P.l}" x2="${W-P.r}" y1="${ys(v)}" y2="${ys(v)}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/><text x="${P.l-8}" y="${ys(v)+4}" text-anchor="end">${fmt(v)}</text>`});
+  const step=Math.ceil(cats.length/7);
+  cats.forEach((c,i)=>{if(i%step===0||i===cats.length-1)s+=`<text x="${xs(c)}" y="${H-8}" text-anchor="middle">${c.slice(5).replace("-","/")}</text>`});
+  if(ref)s+=`<line x1="${P.l}" x2="${W-P.r}" y1="${ys(ref.v)}" y2="${ys(ref.v)}" stroke="var(--drop)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-P.r}" y="${ys(ref.v)-6}" text-anchor="end" style="fill:var(--drop)">${ref.label}</text>`;
+  series.forEach(Ln=>{
+    if(!Ln.pts.length)return;
+    const d=Ln.pts.map((p,i)=>(i?"L":"M")+xs(p.x).toFixed(1)+" "+ys(p.y).toFixed(1)).join(" ");
+    if((area||Ln.area)&&Ln.pts.length>1){const gid="g"+Math.random().toString(36).slice(2,8);s+=`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:#5B8CFF;stop-opacity:.42"/><stop offset="1" style="stop-color:#5B8CFF;stop-opacity:0"/></linearGradient></defs><path d="${d} L${xs(Ln.pts.at(-1).x).toFixed(1)} ${ys(yMin)} L${xs(Ln.pts[0].x).toFixed(1)} ${ys(yMin)} Z" fill="url(#${gid})" stroke="none"/>`}
+    s+=`<path d="${d}" fill="none" stroke="${Ln.color}" stroke-width="${Ln.w||2}" stroke-linejoin="round" stroke-linecap="round"${Ln.op?` stroke-opacity="${Ln.op}"`:""}/>`;
+    Ln.pts.forEach((p,i)=>{const last=i===Ln.pts.length-1;
+      s+=`<circle cx="${xs(p.x)}" cy="${ys(p.y)}" r="${last?6:3}" fill="${last?"#F4F6FD":"var(--bg)"}" stroke="${Ln.color}" stroke-width="${last?3:2}"><title>${esc(p.tip||"")}</title></circle>`;
+      if(last&&Ln.label!==false)s+=`<text x="${xs(p.x)-8}" y="${ys(p.y)-9}" text-anchor="end" style="fill:${Ln.color};font-weight:600">${fmt(Math.round(p.y))}</text>`;
+    });
+  });
+  el.innerHTML=s+"</svg>";
+}
+
+/* ---- tests block ---- */
+function typeStats(recs,sec){
+  const rel=recs.filter(r=>(sec==="LR"?r.lrt:r.rct)>0);
+  const n=rel.length;if(!n)return [];
+  const half=Math.floor(n/2),early=rel.slice(0,half),late=rel.slice(half);
+  const count=(list,k)=>list.reduce((s,r)=>s+(r.misses||[]).filter(m=>m.s===sec&&m.t===k).length,0);
+  return typesOf(sec).map(({k})=>{
+    const total=count(rel,k),per=total/n;
+    const e=early.length?count(early,k)/early.length:null,l=late.length?count(late,k)/late.length:null;
+    return {k,total,per,delta:(e!=null&&l!=null&&half>0)?l-e:null};
+  }).filter(x=>x.total>0).sort((a,b)=>b.per-a.per);
+}
+function renderKpis(recs){
+  const scored=recs.filter(r=>r.score);
+  const last=scored.at(-1),prev=scored.at(-2);
+  const last3=avg(scored.slice(-3).map(r=>r.score));
+  const best=scored.length?Math.max(...scored.map(r=>r.score)):null;
+  const sum=(list,k)=>list.reduce((s,r)=>s+(+r[k]||0),0);
+  const lr=pct(sum(recs,"lrc"),sum(recs,"lrt")),rc=pct(sum(recs,"rcc"),sum(recs,"rct"));
+  const r3=recs.slice(-3),lrR=pct(sum(r3,"lrc"),sum(r3,"lrt")),rcR=pct(sum(r3,"rcc"),sum(r3,"rct"));
+  const misses=recs.reduce((s,r)=>s+(r.misses||[]).length,0);
+  const delta=last&&prev?last.score-prev.score:null;
+  const tiles=[
+    [t("kpi.last"),last?last.score:"—",last?(delta==null?esc(last.source||""):`<span class="${delta>=0?"up":"down"}">${delta>=0?"▲":"▼"} ${Math.abs(delta)}</span> ${t("kpi.vs")}`):t("kpi.noScore")],
+    [t("kpi.avg3"),last3?last3.toFixed(1):"—",best?t("kpi.best",{n:best}):""],
+    [t("kpi.lr"),fmtPct(lr),lrR!=null?t("kpi.r3",{p:fmtPct(lrR)}):""],
+    [t("kpi.rc"),fmtPct(rc),rcR!=null?t("kpi.r3",{p:fmtPct(rcR)}):""],
+    [t("kpi.sess"),`${recs.length}<span style="font-size:16px;color:var(--muted)"> / ${misses}</span>`,t("kpi.sessSub")]
+  ];
+  $("#kpis").innerHTML=tiles.map(([l,v,d])=>`<div class="kpi"><span class="label">${l}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join("");
+}
+function renderChart(recs){
+  const el=$("#chart");
+  if(state.chart==="score"){
+    const pts=recs.filter(r=>r.score).map(r=>({x:r.date,y:+r.score,tip:`${r.source||""} ${r.date}: ${r.score}`}));
+    $("#chartSub").textContent=t("ov.subScore");
+    if(!pts.length){el.innerHTML=`<p class="empty">${t("ov.noScore")}</p>`;return}
+    const ys=pts.map(p=>p.y).concat(state.target?[+state.target]:[]);
+    let yMin=Math.max(120,Math.floor((Math.min(...ys)-3)/5)*5),yMax=Math.min(180,Math.ceil((Math.max(...ys)+3)/5)*5);
+    if(yMax-yMin<10)yMax=Math.min(180,yMin+10);
+    const ticks=[];for(let v=yMin;v<=yMax;v+=5)ticks.push(v);
+    drawLines(el,{cats:[...new Set(pts.map(p=>p.x))].sort(),series:[{pts,color:"var(--drop-hi)",w:3,area:true}],yMin,yMax,ticks,fmt:v=>v,
+      ref:state.target&&state.target>=yMin&&state.target<=yMax?{v:+state.target,label:t("ov.target",{n:state.target})}:null});
+  }else{
+    $("#chartSub").textContent=t("ov.subAcc");
+    const lr=recs.filter(r=>r.lrt>0).map(r=>({x:r.date,y:r.lrc/r.lrt*100,tip:`LR ${r.date}: ${Math.round(r.lrc/r.lrt*100)}%`}));
+    const rc=recs.filter(r=>r.rct>0).map(r=>({x:r.date,y:r.rcc/r.rct*100,tip:`RC ${r.date}: ${Math.round(r.rcc/r.rct*100)}%`}));
+    const all=lr.concat(rc);
+    if(!all.length){el.innerHTML=`<p class="empty">${t("ov.noAcc")}</p>`;return}
+    const yMin=Math.max(0,Math.floor((Math.min(...all.map(p=>p.y))-5)/10)*10);
+    const ticks=[];for(let v=yMin;v<=100;v+=10)ticks.push(v);
+    drawLines(el,{cats:[...new Set(all.map(p=>p.x))].sort(),series:[{pts:lr,color:"var(--warn)"},{pts:rc,color:"var(--good)"}],yMin,yMax:100,ticks,fmt:v=>v+"%"});
+  }
+}
+function renderTypes(recs){
+  const st=typeStats(recs,state.sec);
+  if(!st.length){$("#types").innerHTML=`<p class="empty">${t("ov.noTypes")}</p>`;return}
+  const max=st[0].per;
+  $("#types").innerHTML=st.map((x,i)=>{
+    const tr=x.delta==null?"":Math.abs(x.delta)<0.15?`<span style="color:var(--muted)">${t("ov.flat")}</span>`:x.delta<0?`<span class="up">▼${Math.abs(x.delta).toFixed(1)}</span>`:`<span class="down">▲${x.delta.toFixed(1)}</span>`;
+    const sub=tSub(state.sec,x.k);
+    return `<div class="trow${i<3?" top":""}"><span class="nm">${tName(state.sec,x.k)}${sub?`<em>${sub}</em>`:""}</span><span class="bar"><i style="width:${(x.per/max*100).toFixed(1)}%"></i></span><span class="num">${t("ov.per",{n:x.per.toFixed(1)})}</span><span class="trend">${tr}</span></div>`;
+  }).join("");
+}
+function reasonRows(misses){
+  const all=misses.filter(m=>m.r&&m.r!=="other"||true);
+  const c={};all.forEach(m=>{const k=REASON_KEYS.includes(m.r)?m.r:"other";c[k]=(c[k]||0)+1});
+  const list=Object.entries(c).sort((a,b)=>(a[0]==="other")-(b[0]==="other")||b[1]-a[1]);
+  if(!list.length)return "";
+  const max=Math.max(...list.map(x=>x[1]));
+  return list.map(([k,v])=>`<div class="trow" style="grid-template-columns:minmax(0,150px) 1fr 44px 44px"><span class="nm">${rName(k)}</span><span class="bar"><i style="width:${v/max*100}%;background:var(--graphite)"></i></span><span class="num">${v}</span><span class="num tiny">${Math.round(v/all.length*100)}%</span></div>`).join("");
+}
+function renderReasons(recs){
+  const rows=reasonRows(recs.flatMap(r=>r.misses||[]));
+  $("#reasons").innerHTML=rows||`<p class="empty">${t("ov.noMiss")}</p>`;
+  const a=avg(recs.filter(r=>r.score).slice(-3).map(r=>r.score));
+  $("#targetNote").textContent=state.target&&a?(a>=state.target?t("ov.targetMet"):t("ov.targetGap",{n:(state.target-a).toFixed(1)})):"";
+}
+function renderInsights(recs){
+  const out=[];
+  const lr=typeStats(recs,"LR"),rc=typeStats(recs,"RC");
+  const lrMiss=recs.reduce((s,r)=>s+(r.misses||[]).filter(m=>m.s==="LR").length,0);
+  const link=(sec,k)=>` <a href="#g-${sec}-${k}">${t("in.how")}</a>`;
+  const full=(sec,k)=>tName(sec,k)+(tSub(sec,k)?`（${tSub(sec,k)}）`:"");
+  if(lr[0])out.push({hot:true,h:t("in.lr",{name:full("LR",lr[0].k)}),d:t("in.lrD",{p:Math.round(lr[0].total/lrMiss*100),n:lr[0].per.toFixed(1)})+(lr[1]?" "+t("in.next",{name:tName("LR",lr[1].k)}):"")+link("LR",lr[0].k)});
+  if(rc[0])out.push({hot:true,h:t("in.rc",{name:tName("RC",rc[0].k)}),d:t("in.rcD",{n:rc[0].per.toFixed(1)})+link("RC",rc[0].k)});
+  const all=recs.flatMap(r=>r.misses||[]).filter(m=>REASON_KEYS.includes(m.r));
+  if(all.length){
+    const c={};all.forEach(m=>c[m.r]=(c[m.r]||0)+1);
+    const [k,v]=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
+    out.push({h:t("in.reason",{r:rName(k)}),d:t("in.reasonD",{p:Math.round(v/all.length*100)})+" "+t("tip."+k)});
+  }
+  const imp=lr.concat(rc).filter(x=>x.delta!=null&&x.delta<=-0.5).sort((a,b)=>a.delta-b.delta)[0];
+  if(imp){const sec=lr.includes(imp)?"LR":"RC";out.push({h:t("in.imp",{name:tName(sec,imp.k)}),d:t("in.impD",{n:Math.abs(imp.delta).toFixed(1)})})}
+  $("#insights").innerHTML=insightList(out,t("in.none"));
+}
+const insightList=(out,none)=>out.length?out.map((o,i)=>`<li class="${o.hot?"hot":""}"><span class="dot">${String.fromCharCode(65+i)}</span><div><div>${o.h}</div><div class="tiny">${o.d}</div></div></li>`).join(""):`<li class="empty">${none}</li>`;
+
+/* ---- practice block ---- */
+state.psec="LR";
+const practiceItems=P=>P.flatMap(r=>((r.quiz&&r.quiz.items)||[]).map(x=>({...x,date:r.date,at:r.createdAt||0}))).sort((a,b)=>a.at-b.at||(a.date<b.date?-1:a.date>b.date?1:0));
+const sumF=(list,k)=>list.reduce((s,r)=>s+(+r[k]||0),0);
+const accOf=list=>{const c=sumF(list,"lrc")+sumF(list,"rcc"),n=sumF(list,"lrt")+sumF(list,"rct");return n?{acc:c/n,n}:null};
+const accClass=a=>a<.6?"lo":a<.75?"mid":"hi";
+const cellsBar=a=>{const on=Math.round(a*20);return `<div class="cells ${accClass(a)}" role="img" aria-label="${Math.round(a*100)}%">${Array.from({length:20},(_,i)=>`<span class="${i<on?"on":""}"></span>`).join("")}</div>`};
+function typeAcc(items,sec){
+  const g={};items.filter(x=>x.s===sec&&x.t).forEach(x=>(g[x.t]=g[x.t]||[]).push(x));
+  return Object.entries(g).map(([k,xs])=>{
+    const n=xs.length,ok=xs.filter(x=>x.ok).length,ms=avg(xs.map(x=>x.ms||0));
+    let delta=null;if(n>=6){const h=Math.floor(n/2),a=xs.slice(0,h),b=xs.slice(h);delta=b.filter(x=>x.ok).length/b.length-a.filter(x=>x.ok).length/a.length}
+    return {k,s:sec,n,ok,acc:ok/n,ms,delta};
+  }).sort((a,b)=>(b.n>=3)-(a.n>=3)||a.acc-b.acc||b.n-a.n);
+}
+function renderPractice(){
+  const P=practiceData();
+  $("#practiceBanner").hidden=!state.demoP;
+  const items=practiceItems(P);
+  renderPRing(P);renderPKpis(P,items);renderPChart(P);renderPTypes(items);renderPDiff(items,P);renderPInsights(items,P);
+}
+function windowAcc(P,from,to){return accOf(P.filter(r=>r.date>=from&&r.date<=to))}
+function renderPRing(P){
+  const tot=accOf(P),lrA=pct(sumF(P,"lrc"),sumF(P,"lrt")),rcA=pct(sumF(P,"rcc"),sumF(P,"rct"));
+  const d0=today(),w1=windowAcc(P,addDays(d0,-6),d0),w0=windowAcc(P,addDays(d0,-13),addDays(d0,-7));
+  const C1=2*Math.PI*82,C2=2*Math.PI*62,a=tot?tot.acc:0,b=w1?w1.acc:0;
+  const dpp=w1&&w0?Math.round((w1.acc-w0.acc)*100):null;
+  const sub=w1?t("pr.week",{p:fmtPct(w1.acc)})+(dpp!=null?` ${dpp>=0?"▲":"▼"}${Math.abs(dpp)}`:""):t("pk.weekNone");
+  $("#pring").innerHTML=`<div class="top"><span>${t("pr.title")}</span><span class="mono">${tot?t("pk.weekN",{n:tot.n}):""}</span></div>
+  <svg viewBox="0 0 200 200" role="img" aria-label="${t("pk.acc")} ${fmtPct(tot?.acc)}">
+    <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14"/>
+    <circle cx="100" cy="100" r="82" fill="none" stroke="#5B8CFF" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(C1*a).toFixed(1)} ${C1.toFixed(1)}" transform="rotate(-90 100 100)" style="filter:drop-shadow(0 0 6px rgba(91,140,255,.6))"/>
+    <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+    <circle cx="100" cy="100" r="62" fill="none" stroke="#00E0B8" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C2*b).toFixed(1)} ${C2.toFixed(1)}" transform="rotate(-90 100 100)"/>
+    <text x="100" y="106" text-anchor="middle" font-family="Sora, sans-serif" font-size="40" font-weight="700" fill="#F4F6FD">${tot?Math.round(a*100)+"%":"—"}</text>
+    <text x="100" y="130" text-anchor="middle" font-size="12" fill="#8A93B2">${esc(sub)}</text>
+  </svg>
+  <div class="minis"><div class="mini" style="background:rgba(255,184,107,0.10)"><div class="k">LR</div><div class="v">${fmtPct(lrA)}</div></div><div class="mini" style="background:rgba(0,224,184,0.10)"><div class="k">RC</div><div class="v">${fmtPct(rcA)}</div></div></div>
+  <div class="legend" style="align-self:stretch;justify-content:center;margin:0"><span style="--c:#5B8CFF">${t("pr.outer")}</span><span style="--c:#00E0B8">${t("pr.inner")}</span></div>`;
+}
+function renderPKpis(P,items){
+  const tot=accOf(P);
+  const lrA=pct(sumF(P,"lrc"),sumF(P,"lrt")),rcA=pct(sumF(P,"rcc"),sumF(P,"rct"));
+  const d0=today(),w1=windowAcc(P,addDays(d0,-6),d0),w0=windowAcc(P,addDays(d0,-13),addDays(d0,-7));
+  const dpp=w1&&w0?Math.round((w1.acc-w0.acc)*100):null;
+  const ms=avg(items.map(x=>x.ms||0).filter(Boolean));
+  const weak=[...typeAcc(items,"LR"),...typeAcc(items,"RC")].filter(x=>x.n>=3).sort((a,b)=>a.acc-b.acc)[0];
+  const tiles=[
+    [t("pk.total"),tot?tot.n:0,t("pk.totalSub",{n:P.length})],
+    [t("pk.week"),w1?fmtPct(w1.acc):"—",w1?(dpp==null?t("pk.weekN",{n:w1.n}):`<span class="${dpp>=0?"up":"down"}">${dpp>=0?"▲":"▼"} ${Math.abs(dpp)}</span> ${t("pk.weekVs")}`):t("pk.weekNone")],
+    [t("pk.time"),ms?fmtTime(ms):"—",ms?`<span class="${ms>paceMs()?"down":"up"}">${t("pk.timeSub",{t:fmtTime(paceMs())})}</span>`:""],
+    [t("pk.weak"),weak?`<span style="font-size:20px">${tName(weak.s,weak.k)}</span>`:"—",weak?`${fmtPct(weak.acc)} · ${t("pt.n",{n:weak.n})}`:t("pk.weakNone")]
+  ];
+  $("#pkpis").innerHTML=tiles.map(([l,v,d])=>`<div class="kpi"><span class="label">${l}</span><span class="v">${v}</span><span class="d">${d}</span></div>`).join("");
+}
+function renderPChart(P){
+  const el=$("#pchart");
+  const dates=[...new Set(P.map(r=>r.date))].sort();
+  if(!dates.length){el.innerHTML=`<p class="empty">${t("pc.none")}</p>`;$("#pchartLegend").innerHTML="";$("#pchartSub").textContent="";return}
+  const weekly=dates.length>21,key=d=>weekly?weekStart(d):d;
+  const m=new Map();P.forEach(r=>{const k=key(r.date);const b=m.get(k)||{k,lc:0,lt:0,rc:0,rt:0};b.lc+=+r.lrc||0;b.lt+=+r.lrt||0;b.rc+=+r.rcc||0;b.rt+=+r.rct||0;m.set(k,b)});
+  const bs=[...m.values()].sort((a,b)=>a.k<b.k?-1:1).slice(-30);
+  $("#pchartSub").textContent=weekly?t("pc.subWeek"):t("pc.subDay");
+  const mk=(f,lab)=>bs.filter(b=>f(b)!=null).map(b=>({x:b.k,y:f(b)*100,tip:`${lab} ${b.k}: ${Math.round(f(b)*100)}% (${lab==="LR"?b.lt:lab==="RC"?b.rt:b.lt+b.rt})`}));
+  const all=mk(b=>pct(b.lc+b.rc,b.lt+b.rt),t("pc.all")),lr=mk(b=>pct(b.lc,b.lt),"LR"),rc=mk(b=>pct(b.rc,b.rt),"RC");
+  const vals=[...all,...lr,...rc].map(p=>p.y);
+  const yMin=Math.max(0,Math.floor((Math.min(...vals)-5)/10)*10);
+  const ticks=[];for(let v=yMin;v<=100;v+=10)ticks.push(v);
+  $("#pchartLegend").innerHTML=`<span style="--c:var(--drop-hi)">${t("pc.all")}</span><span style="--c:var(--warn)">LR</span><span style="--c:var(--good)">RC</span>`;
+  drawLines(el,{cats:bs.map(b=>b.k),series:[{pts:lr,color:"var(--warn)",w:1.5,label:false,op:.8},{pts:rc,color:"var(--good)",w:1.5,label:false,op:.8},{pts:all,color:"var(--drop-hi)",w:3,area:true}],yMin,yMax:100,ticks,fmt:v=>v+"%"});
+}
+function renderPTypes(items){
+  const list=typeAcc(items,state.psec);
+  if(!list.length){$("#ptypes").innerHTML=`<p class="empty">${t("pt.none")}</p>`;return}
+  const head=`<div class="arow head"><span>${t("pt.colType")}</span><span>${t("pt.colAcc")}</span><span></span><span class="c-n"></span><span class="c-time">${t("pt.colTime")}</span><span class="c-trend"></span><span></span></div>`;
+  $("#ptypes").innerHTML=head+list.map(x=>{
+    const few=x.n<3,sub=tSub(x.s,x.k);
+    const tr=x.delta==null?"":Math.abs(x.delta)<0.08?`<span style="color:var(--muted)">—</span>`:x.delta>0?`<span class="up">▲${Math.round(x.delta*100)}</span>`:`<span class="down">▼${Math.round(Math.abs(x.delta)*100)}</span>`;
+    return `<div class="arow${few?" few":""}"><span class="nm"><a href="#g-${x.s}-${x.k}">${tName(x.s,x.k)}</a>${sub?`<em>${sub}</em>`:""}${few?` <em>${t("pt.few")}</em>`:""}</span>
+      ${cellsBar(x.acc)}
+      <span class="accv ${accClass(x.acc)}">${fmtPct(x.acc)}</span>
+      <span class="num tiny c-n mono">n=${x.n}</span>
+      <span class="num c-time mono ${x.ms>paceMs()?"down":""}">${fmtTime(x.ms)}</span>
+      <span class="trend c-trend">${tr}</span>
+      <button type="button" class="btn ghost sm" data-practice="${x.s}:${x.k}">${t("pt.go")}</button></div>`;
+  }).join("");
+}
+function renderPDiff(items,P){
+  const row=(label,xs)=>{if(!xs.length)return "";const a=xs.filter(x=>x.ok).length/xs.length;const ms=avg(xs.map(x=>x.ms||0));
+    return `<div class="arow small"><span class="nm">${label}</span>${cellsBar(a)}<span class="accv ${accClass(a)}">${fmtPct(a)}</span><span class="num tiny c-n mono">n=${xs.length}</span><span class="num mono ${ms>paceMs()?"down":""}">${fmtTime(ms)}</span></div>`};
+  const diffRows=[1,2,3].map(d=>row(dName(d),items.filter(x=>x.d===d))).join("")+row(dName(0),items.filter(x=>!x.d));
+  const secRows=row("LR",items.filter(x=>x.s==="LR"))+row("RC",items.filter(x=>x.s==="RC"));
+  const rr=reasonRows(P.flatMap(r=>r.misses||[]).filter(m=>REASON_KEYS.includes(m.r)));
+  $("#pdiff").innerHTML=items.length?`<div><span class="label">${t("pd.diff")}</span><div class="atable" style="margin-top:8px">${diffRows}</div></div>
+    <div><span class="label">${t("pd.sec")}</span><div class="atable" style="margin-top:8px">${secRows}</div></div>
+    <div><span class="label">${t("pd.reasons")}</span><div class="typelist" style="margin-top:8px">${rr||`<p class="tiny" style="margin:0">${t("pd.noReasons")}</p>`}</div></div>`:`<p class="empty">${t("pc.none")}</p>`;
+}
+function renderPInsights(items,P){
+  const out=[];
+  const types=[...typeAcc(items,"LR"),...typeAcc(items,"RC")].filter(x=>x.n>=3);
+  const overall=items.length?items.filter(x=>x.ok).length/items.length:null;
+  const go=x=>` <a href="#g-${x.s}-${x.k}">${t("in.how")}</a> · <button type="button" class="linkbtn" data-practice="${x.s}:${x.k}">${t("pi.practice")}</button>`;
+  types.slice().sort((a,b)=>a.acc-b.acc).slice(0,2).forEach((x,i)=>{
+    const gap=overall!=null?Math.round((overall-x.acc)*100):0;
+    out.push({hot:true,h:t("pi.weak",{name:tName(x.s,x.k)+(tSub(x.s,x.k)?`（${tSub(x.s,x.k)}）`:""),p:Math.round(x.acc*100),n:x.n}),d:(gap>0?t("pi.weakD",{g:gap}):"")+go(x)});
+  });
+  const dacc=[1,2,3].map(d=>{const xs=items.filter(x=>x.d===d);return xs.length>=3?xs.filter(x=>x.ok).length/xs.length:null});
+  let drop=null;for(let i=1;i<3;i++){if(dacc[i]!=null&&dacc[i-1]!=null){const dd=dacc[i-1]-dacc[i];if(dd>=.15&&(!drop||dd>drop.dd))drop={i,dd}}}
+  if(drop)out.push({h:t("pi.drop",{d:dName(drop.i+1)}),d:t("pi.dropD",{a:Math.round(dacc[drop.i-1]*100),b:Math.round(dacc[drop.i]*100),prev:dName(drop.i)})});
+  else if(dacc[2]!=null&&dacc[2]>=.7)out.push({h:t("pi.hardOk",{p:Math.round(dacc[2]*100)}),d:t("pi.hardOkD")});
+  const slow=types.filter(x=>x.ms>paceMs()*1.2).sort((a,b)=>b.ms/paceMs()-a.ms/paceMs())[0];
+  if(slow)out.push({h:t("pi.slow",{name:tName(slow.s,slow.k)}),d:t("pi.slowD",{t:fmtTime(slow.ms),s:Math.round((slow.ms-paceMs())/1000)})});
+  const d0=today(),w1=windowAcc(P,addDays(d0,-6),d0),w0=windowAcc(P,addDays(d0,-13),addDays(d0,-7));
+  if(w1&&w0){const dd=Math.round((w1.acc-w0.acc)*100);if(Math.abs(dd)>=3)out.push({h:t("pi.trend",{a:Math.round(w1.acc*100)}),d:dd>0?t("pi.trendUp",{d:dd}):t("pi.trendDown",{d:-dd})})}
+  const imp=types.filter(x=>x.delta!=null&&x.delta>=.15).sort((a,b)=>b.delta-a.delta)[0];
+  if(imp)out.push({h:t("pi.imp",{name:tName(imp.s,imp.k)}),d:t("pi.impD",{d:Math.round(imp.delta*100)})});
+  $("#pinsights").innerHTML=insightList(out,t("pi.none"));
+}
+function goPractice(v){drillCfg.type=v;drillCfg.sec="all";drillCfg.diff="mix";drillCfg.scope="all";quiz=null;location.hash="drill";renderDrill()}
+document.querySelectorAll("[data-psec]").forEach(b=>b.addEventListener("click",()=>{state.psec=b.dataset.psec;document.querySelectorAll("[data-psec]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderPTypes(practiceItems(practiceData()))}));
+["#ptypes","#pinsights"].forEach(s=>$(s).addEventListener("click",e=>{const b=e.target.closest("[data-practice]");if(b)goPractice(b.dataset.practice)}));
+document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{const el=document.getElementById(b.dataset.jump);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})}));
+const srcLabel=s=>String(s||"").replace(/^(随机刷题|Random practice) · /,"");
+function renderHistory(){
+  const recs=state.records.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.createdAt||0)-(a.createdAt||0));
+  $("#histSub").textContent=recs.length?t("h.count",{n:recs.length}):t("h.empty");
+  $("#hist").innerHTML=recs.map(r=>{
+    const c={};(r.misses||[]).forEach(m=>{const k=m.s+":"+m.t;c[k]=(c[k]||0)+1});
+    const top=Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>{const [s,kk]=k.split(":");return `<span class="pill">${tName(s,kk)||esc(k)} ×${v}</span>`}).join(" ");
+    const src=r.kind==="Drill"&&r.quiz?t("dr.src")+" · "+esc(srcLabel(r.source)):esc(r.source||"—");
+    return `<tr><td class="n">${esc(r.date)}</td><td>${src}<div class="tiny">${t("k."+(r.kind||"PT"))}${r.notes?" · "+esc(r.notes):""}</div></td><td class="n">${r.score||"—"}</td><td class="n">${r.lrt>0?`${r.lrc}/${r.lrt}`:"—"}</td><td class="n">${r.rct>0?`${r.rcc}/${r.rct}`:"—"}</td><td>${top||'<span class="tiny">—</span>'}</td><td><button class="btn danger sm" data-del="${esc(r.id)}">${t("c.del")}</button></td></tr>`;
+  }).join("");
+}
+
+/* =================== guide =================== */
+function typeQStats(sec,k){
+  const qs=bankQs().filter(q=>q.sec===sec&&q.t===k);
+  let n=0,w=0;qs.forEach(q=>{const s=state.qstats[q.id];if(s){n+=s.n||0;w+=s.w||0}});
+  const miss=state.records.reduce((s,r)=>s+(r.misses||[]).filter(m=>m.s===sec&&m.t===k).length,0);
+  return {count:qs.length,n,w,miss};
+}
+function renderGuide(){
+  const en=prefs.lang==="en";
+  $("#guideBody").innerHTML=FAMILIES.map(f=>{
+    const ts=TYPES.filter(x=>x.fam===f.id);
+    const famCount=bankQs().filter(q=>q.sec===f.sec&&ts.some(x=>x.k===q.t)).length;
+    return `<div class="sheet fam"><div class="famhead"><div><h2>${L(f.name)} <span class="label">${f.sec}${en?"":" · "+f.name.en}</span></h2><p>${L(f.desc)}</p></div>
+      <button class="btn ghost sm" data-practice="fam:${f.id}" ${famCount?"":"disabled"}>${t("g.pFam",{n:famCount})}</button></div>
+      <div class="cards">${ts.map(x=>{const s=typeQStats(x.sec,x.k);
+        const acc=s.n?t("g.acc",{p:Math.round((1-s.w/s.n)*100),n:s.n}):t("g.never");
+        return `<article class="tcard" id="g-${x.sec}-${x.k}"><h3>${en?x.en:x.zh}${en?"":`<span class="en">${x.en}</span>`}</h3>
+          <div><span class="label">${t("g.cue")}</span><div class="cue">${esc(x.cue)}</div></div>
+          <div><span class="label">${t("g.how")}</span><ol>${L(x.how).map(h=>`<li>${esc(h)}</li>`).join("")}</ol></div>
+          <div class="trap"><b>${t("g.trap")}</b>${esc(L(x.trap))}</div>
+          <div class="tfoot"><span>${acc}${s.miss?" · "+t("g.missed",{n:s.miss}):""}</span><button class="btn ghost sm" data-practice="${x.sec}:${x.k}" ${s.count?"":"disabled"}>${t("g.pType",{n:s.count})}</button></div></article>`}).join("")}</div></div>`;
+  }).join("");
+  const h=location.hash.slice(1);if(h.startsWith("g-")){const el=document.getElementById(h);if(el)el.classList.add("flash")}
+}
+$("#guideBody").addEventListener("click",e=>{const b=e.target.closest("[data-practice]");if(!b)return;
+  drillCfg.type=b.dataset.practice;drillCfg.sec="all";drillCfg.diff="mix";drillCfg.scope="all";quiz=null;location.hash="drill";renderDrill()});
+
+/* =================== drill =================== */
+let quiz=null,tick=null;
+const drillCfg={diff:"mix",sec:"all",type:"all",scope:"all",count:prefs.count,showType:prefs.showType};
+function syncDrillDefaults(){if(!quiz){drillCfg.count=prefs.count;drillCfg.showType=prefs.showType}}
+function poolFor(cfg){
+  let qs=bankQs().filter(q=>Array.isArray(q.ch)&&q.ch.length>=2&&q.a!=null);
+  if(cfg.sec!=="all")qs=qs.filter(q=>q.sec===cfg.sec);
+  if(cfg.type.startsWith("fam:")){const ks=TYPES.filter(x=>x.fam===cfg.type.slice(4));qs=qs.filter(q=>ks.some(x=>x.sec===q.sec&&x.k===q.t))}
+  else if(cfg.type!=="all"){const [s,k]=cfg.type.split(":");qs=qs.filter(q=>q.sec===s&&q.t===k)}
+  if(cfg.scope==="new")qs=qs.filter(q=>!state.qstats[q.id]);
+  if(cfg.scope==="wrong")qs=qs.filter(q=>state.qstats[q.id]&&state.qstats[q.id].last===0);
+  const byDiff=qs;
+  if(cfg.diff!=="mix")qs=qs.filter(q=>q.d===+cfg.diff);
+  return {qs,byDiff};
+}
+function pick(qs,count,diff){
+  if(diff!=="mix")return shuffle(qs).slice(0,count);
+  const groups=[1,2,3,null].map(d=>shuffle(qs.filter(q=>(q.d||null)===d))).filter(g=>g.length);
+  const out=[];let i=0;
+  while(out.length<count&&groups.some(g=>g.length)){const g=groups[i%groups.length];if(g.length)out.push(g.pop());i++}
+  return shuffle(out);
+}
+function typeLabel(v){
+  if(v==="all")return t("dr.allTypes");
+  if(v.startsWith("fam:"))return famName(v.slice(4));
+  const [s,k]=v.split(":");return tName(s,k)||v;
+}
+function cfgLabel(c){return [c.diff==="mix"?t("d.mix"):dName(+c.diff),c.sec==="all"?"":c.sec,c.type==="all"?"":typeLabel(c.type),c.scope==="new"?t("dr.sNew"):c.scope==="wrong"?t("dr.sWrong"):""].filter(Boolean).join(" · ")}
+function renderDrill(){
+  if(quiz){quiz.done?renderResult():renderQuestion();return}
+  clearInterval(tick);
+  const {qs,byDiff}=poolFor(drillCfg);
+  const dc={1:0,2:0,3:0,0:0};byDiff.forEach(q=>dc[q.d||0]++);
+  const seg=(key,opts)=>`<div class="seg" role="group">${opts.map(([v,l])=>`<button type="button" data-cfg="${key}" data-v="${v}" aria-pressed="${String(drillCfg[key])===String(v)}">${l}</button>`).join("")}</div>`;
+  const opt=(v,l)=>`<option value="${v}" ${drillCfg.type===v?"selected":""}>${esc(l)}</option>`;
+  const en=prefs.lang==="en";
+  const typeSel=`<select id="cfgType" style="max-width:320px">${opt("all",t("dr.allTypes"))}${FAMILIES.filter(f=>drillCfg.sec==="all"||f.sec===drillCfg.sec).map(f=>`<optgroup label="${f.sec} · ${esc(L(f.name))}">${opt("fam:"+f.id,t("dr.whole",{f:L(f.name)}))}${TYPES.filter(x=>x.fam===f.id).map(x=>opt(x.sec+":"+x.k,en?x.en:x.zh+" · "+x.en)).join("")}</optgroup>`).join("")}</select>`;
+  const n=Math.min(drillCfg.count,qs.length);
+  const recent=state.records.filter(r=>r.kind==="Drill"&&r.quiz).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,5);
+  $("#drillBody").innerHTML=`
+  ${usingSampleBank()?`<div class="banner" style="margin-bottom:16px"><span>${t("dr.sample")}</span></div>`:""}
+  <div class="grid2">
+    <div class="sheet setup">
+      <div><h2>${t("dr.title")}</h2><p class="sub" style="margin:0">${t("dr.sub")}</p></div>
+      <div class="srow"><span class="label">${t("dr.diff")}</span>${seg("diff",[["mix",t("d.mix")],["1",t("d.1")],["2",t("d.2")],["3",t("d.3")]])}</div>
+      <div class="srow"><span class="label">${t("dr.sec")}</span>${seg("sec",[["all",t("c.all")],["LR","LR"],["RC","RC"]])}</div>
+      <div class="srow"><span class="label">${t("dr.type")}</span>${typeSel}</div>
+      <div class="srow"><span class="label">${t("dr.scope")}</span>${seg("scope",[["all",t("dr.sAll")],["new",t("dr.sNew")],["wrong",t("dr.sWrong")]])}</div>
+      <div class="srow"><span class="label">${t("dr.count")}</span>${seg("count",[["5","5"],["10","10"],["20","20"]])}</div>
+      <label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="cfgShow" ${drillCfg.showType?"checked":""}> ${t("dr.show")}</label>
+      <p class="poolnote">${t("dr.pool",{n:qs.length})}${drillCfg.diff==="mix"?t("dr.dist",{a:dc[1],b:dc[2],c:dc[3],d:dc[0]?t("dr.distU",{n:dc[0]}):""}):""}${qs.length&&qs.length<drillCfg.count?t("dr.short",{c:drillCfg.count,n:qs.length}):""}</p>
+      <div class="actions"><button class="btn" type="button" id="startQuiz" ${n?"":"disabled"}>${t("dr.start",{n:n||""})}</button>${qs.length?"":`<span class="tiny">${t("dr.none")}</span>`}</div>
+    </div>
+    <div class="sheet">
+      <h2>${t("dr.recent")}</h2>
+      <p class="sub">${t("dr.recentSub")}</p>
+      ${recent.length?`<div class="setlist">${recent.map(r=>{const tot=(r.lrt||0)+(r.rct||0),c=(r.lrc||0)+(r.rcc||0);return `<div class="setrow"><span>${esc(srcLabel(r.source))}<div class="tiny">${esc(r.date)}</div></span><span class="num" style="font-size:16px">${c}/${tot}</span></div>`}).join("")}</div>`:`<p class="empty">${t("dr.noRecent")}</p>`}
+    </div>
+  </div>`;
+}
+$("#drillBody").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.cfg){const k=b.dataset.cfg;drillCfg[k]=k==="count"?+b.dataset.v:b.dataset.v;
+    if(k==="sec"&&drillCfg.type!=="all"){const fs=drillCfg.type.startsWith("fam:")?FAMILIES.find(f=>f.id===drillCfg.type.slice(4))?.sec:drillCfg.type.split(":")[0];if(drillCfg.sec!=="all"&&fs!==drillCfg.sec)drillCfg.type="all"}
+    renderDrill();return}
+  if(b.id==="startQuiz"){const {qs}=poolFor(drillCfg);startQuiz(pick(qs,drillCfg.count,drillCfg.diff),cfgLabel(drillCfg));return}
+  if(b.dataset.choice!=null&&quiz&&!quiz.items[quiz.i].revealed){quiz.items[quiz.i].chosen=+b.dataset.choice;renderQuestion();return}
+  if(b.id==="confirmAns"){reveal();return}
+  if(b.id==="nextQ"){next();return}
+  if(b.dataset.qreason&&quiz){const it=quiz.items[quiz.i];it.reason=it.reason===b.dataset.qreason?null:b.dataset.qreason;renderQuestion();return}
+  if(b.id==="quitQuiz"){if(b.dataset.armed){quiz=null;renderDrill()}else{b.dataset.armed="1";b.textContent=t("q.quitC")}return}
+  if(b.id==="againQuiz"){quiz=null;const {qs}=poolFor(drillCfg);startQuiz(pick(qs,drillCfg.count,drillCfg.diff),cfgLabel(drillCfg));return}
+  if(b.id==="redoWrong"){const w=quiz.items.filter(it=>!it.ok).map(it=>it.q);quiz=null;startQuiz(shuffle(w),t("dr.retry"));return}
+  if(b.id==="backSetup"){quiz=null;renderDrill();return}
+});
+$("#drillBody").addEventListener("change",e=>{
+  if(e.target.id==="cfgType"){drillCfg.type=e.target.value;renderDrill()}
+  if(e.target.id==="cfgShow"){drillCfg.showType=e.target.checked}
+});
+function startQuiz(qs,label){
+  if(!qs.length)return;
+  quiz={label,showType:drillCfg.showType,i:0,done:false,saved:false,items:qs.map(q=>({q,chosen:null,revealed:false,ok:null,ms:0,reason:null})),qStart:Date.now()};
+  renderQuestion();
+}
+const paceMs=()=>Math.max(20,+prefs.pace||84)*1000;
+function renderQuestion(){
+  const it=quiz.items[quiz.i],q=it.q,LT="ABCDE";
+  const tn=tName(q.sec,q.t);
+  const dots=quiz.items.map((x,j)=>`<i class="${x.revealed?(x.ok?"ok":"no"):""} ${j===quiz.i?"cur":""}"></i>`).join("");
+  const choices=q.ch.map((c,j)=>{
+    let cls="choice";
+    if(it.revealed){if(j===q.a)cls+=" right";else if(j===it.chosen)cls+=" wrong"}else if(j===it.chosen)cls+=" sel";
+    return `<button type="button" class="${cls}" data-choice="${j}" ${it.revealed?"disabled":""}><span class="lt">${LT[j]}</span><span>${esc(c)}</span></button>`}).join("");
+  const g=TYPE_BY[q.sec+":"+q.t];
+  const ex=L(q.ex);
+  const fb=it.revealed?`<div class="feedback">
+      <div class="verdict ${it.ok?"ok":"no"}">${it.ok?t("q.right"):t("q.wrong",{L:LT[q.a]})} <span class="tiny" style="font-weight:400">${t("q.time",{t:fmtTime(it.ms)})}${it.ms>paceMs()?" · "+t("q.over",{t:fmtTime(paceMs())}):""}</span></div>
+      <div class="tiny">${tn?tn+(tSub(q.sec,q.t)?" · "+tSub(q.sec,q.t):""):t("q.untyped")}${q.d?` · ${dName(q.d)}`:""}</div>
+      ${ex?`<div>${esc(ex)}</div>`:""}
+      ${g?`<div class="tiny"><b>${t("q.howShort")}</b>${esc(L(g.how)[0])} <a href="#g-${q.sec}-${q.t}">${t("q.fullHow")}</a></div>`:""}
+      ${it.ok?"":`<div><span class="label">${t("q.why")}</span><div class="chips" style="margin-top:4px">${REASON_KEYS.map(k=>`<button type="button" data-qreason="${k}" aria-pressed="${it.reason===k}">${rName(k)}</button>`).join("")}</div></div>`}
+    </div>`:"";
+  const isRC=q.sec==="RC"&&(q.stim||"").length>600;
+  const elapsed=it.revealed?it.ms:Date.now()-quiz.qStart;
+  $("#drillBody").innerHTML=`<div class="sheet">
+    <div class="qtop"><div style="display:grid;gap:6px"><span class="label">${t("q.of",{i:quiz.i+1,n:quiz.items.length})} · ${esc(quiz.label)}${quiz.showType&&tn?` · ${tn}`:""}</span><div class="dots">${dots}</div></div>
+      <div class="actions"><span class="timer ${elapsed>paceMs()?"over":""}" id="qtimer">${fmtTime(elapsed)}</span><button type="button" class="btn ghost sm" id="quitQuiz">${t("q.quit")}</button></div></div>
+    <div class="qlayout ${isRC?"rc":""}">
+      <div class="stim">${esc(q.stim)}</div>
+      <div style="display:grid;gap:14px;align-content:start;min-width:0">
+        <p class="qstem">${esc(q.q)}</p>
+        <div class="choices">${choices}</div>
+        ${fb}
+        <div class="actions">${it.revealed?`<button class="btn" type="button" id="nextQ">${quiz.i===quiz.items.length-1?t("q.results"):t("q.next")}</button>`:`<button class="btn" type="button" id="confirmAns" ${it.chosen==null?"disabled":""}>${t("q.confirm")}</button>`}<span class="tiny">${t("q.keys")}</span></div>
+      </div>
+    </div></div>`;
+  clearInterval(tick);
+  if(!it.revealed)tick=setInterval(()=>{const el=$("#qtimer");if(!el||!quiz)return;const ms=Date.now()-quiz.qStart;el.textContent=fmtTime(ms);el.classList.toggle("over",ms>paceMs())},1000);
+}
+function reveal(){
+  const it=quiz.items[quiz.i];if(it.chosen==null||it.revealed)return;
+  it.revealed=true;it.ok=it.chosen===it.q.a;it.ms=Date.now()-quiz.qStart;renderQuestion();
+}
+function next(){
+  if(quiz.i<quiz.items.length-1){quiz.i++;quiz.qStart=Date.now();renderQuestion();window.scrollTo({top:0})}
+  else{quiz.done=true;clearInterval(tick);finishQuiz();renderResult()}
+}
+async function finishQuiz(){
+  const Q=quiz;if(Q.saved)return;Q.saved=true;
+  const items=Q.items;
+  const lr=items.filter(x=>x.q.sec==="LR"),rc=items.filter(x=>x.q.sec==="RC");
+  const now=new Date();
+  const r={id:"d"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),date:new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,10),kind:"Drill",source:t("dr.src")+" · "+Q.label,score:null,
+    lrc:lr.filter(x=>x.ok).length,lrt:lr.length,rcc:rc.filter(x=>x.ok).length,rct:rc.length,
+    misses:items.filter(x=>!x.ok&&x.q.t).map(x=>({s:x.q.sec,t:x.q.t,r:x.reason||"other"})),notes:"",createdAt:Date.now(),
+    quiz:{items:items.map(x=>({id:x.q.id,ok:x.ok,ms:x.ms,d:x.q.d||null,t:x.q.t||null,s:x.q.sec}))}};
+  const st={...state.qstats};
+  items.forEach(x=>{const o=st[x.q.id]||{n:0,w:0};st[x.q.id]={n:o.n+1,w:o.w+(x.ok?0:1),last:x.ok?1:0,at:Date.now()}});
+  Q.saveKey="rs.saving";
+  try{await store.add(r);await store.setStats(st);state.qstats=st;Q.saveKey="rs.saved"}
+  catch(e){Q.saveKey="rs.fail"}
+  if(quiz===Q&&Q.done&&viewIs("drill"))renderResult();
+}
+function renderResult(){
+  const items=quiz.items,ok=items.filter(x=>x.ok).length,LT="ABCDE";
+  const tot=items.reduce((s,x)=>s+x.ms,0);
+  const byD=[1,2,3].map(d=>{const xs=items.filter(x=>x.q.d===d);return xs.length?`<span class="pill d${d}">${dName(d)} ${xs.filter(x=>x.ok).length}/${xs.length}</span>`:""}).join(" ");
+  const wrongTypes={};items.filter(x=>!x.ok).forEach(x=>{const k=x.q.sec+":"+(x.q.t||"");wrongTypes[k]=(wrongTypes[k]||0)+1});
+  const wt=Object.entries(wrongTypes).sort((a,b)=>b[1]-a[1]);
+  const wrong=items.filter(x=>!x.ok).length;
+  $("#drillBody").innerHTML=`<div class="grid2">
+    <div class="sheet" style="display:grid;gap:14px;align-content:start">
+      <span class="label">${esc(quiz.label)}</span>
+      <div class="bigscore">${ok}<small> / ${items.length}</small></div>
+      <div class="tiny">${t("rs.line",{p:Math.round(ok/items.length*100),t:fmtTime(tot),a:fmtTime(tot/items.length)})}<br>${t("rs.note",{t:fmtTime(paceMs())})}</div>
+      <div>${byD}</div>
+      <div class="toast" role="status">${quiz.saveKey?t(quiz.saveKey):""}</div>
+      <div class="actions"><button class="btn" type="button" id="againQuiz">${t("rs.again")}</button>${wrong?`<button class="btn ghost" type="button" id="redoWrong">${t("rs.redo",{n:wrong})}</button>`:""}<button class="btn ghost" type="button" id="backSetup">${t("rs.change")}</button></div>
+    </div>
+    <div class="sheet">
+      <h2>${t("rs.where")}</h2>
+      ${wt.length?`<div class="typelist" style="margin-top:10px">${wt.map(([k,v])=>{const [s,kk]=k.split(":");const nm=tName(s,kk),sub=tSub(s,kk);return `<div class="trow" style="grid-template-columns:minmax(0,1fr) auto"><span class="nm">${nm||t("q.untyped")}${sub?`<em>${sub}</em>`:""}</span><span>${t("rs.n",{n:v})} ${nm?`<a href="#g-${s}-${kk}" style="color:var(--drop);font-size:13px">${t("rs.how")}</a>`:""}</span></div>`}).join("")}</div>`:`<p class="empty">${t("rs.perfect")}</p>`}
+    </div>
+  </div>
+  <div class="sheet"><h2>${t("rs.review")}</h2>
+    ${items.map((x,j)=>{const nm=tName(x.q.sec,x.q.t);const ex=L(x.q.ex);return `<details class="rev"><summary><span class="pill ${x.ok?"d1":"d3"}">${x.ok?t("rs.ok"):t("rs.no")}</span><span>${j+1}. ${nm||t("c.untagged")}${x.q.d?` · ${dName(x.q.d)}`:""}</span><span class="tiny">${t("rs.chose",{c:LT[x.chosen],a:LT[x.q.a]})} · ${fmtTime(x.ms)}</span></summary>
+      <div class="stim">${esc(x.q.stim)}</div><p class="qstem" style="margin-top:10px">${esc(x.q.q)}</p>
+      <div class="tiny" style="display:grid;gap:3px">${x.q.ch.map((c,k)=>`<div style="${k===x.q.a?"color:var(--good);font-weight:600":k===x.chosen?"color:var(--bad)":""}">(${LT[k]}) ${esc(c)}</div>`).join("")}</div>
+      ${ex?`<p style="font-size:14px">${esc(ex)}</p>`:""}</details>`}).join("")}
+  </div>`;
+}
+document.addEventListener("keydown",e=>{
+  if(!quiz||quiz.done||!viewIs("drill"))return;
+  if(/INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement?.tagName||""))return;
+  const it=quiz.items[quiz.i];const k=e.key.toUpperCase();
+  const idx="ABCDE".indexOf(k);
+  if(k.length===1&&idx>=0&&idx<it.q.ch.length&&!it.revealed){it.chosen=idx;renderQuestion();e.preventDefault()}
+  else if(e.key==="Enter"){if(!it.revealed)reveal();else next();e.preventDefault()}
+});
+
+/* =================== bank: import =================== */
+const normKey=s=>String(s??"").toLowerCase().replace(/[^a-z0-9一-鿿]/g,"");
+const ALIAS={LR:{},RC:{}};
+TYPES.forEach(x=>{[x.k,x.zh,x.en,...x.en.split(" / "),...x.zh.split(" / "),...(x.al||[])].forEach(a=>{const n=normKey(a);if(n&&!ALIAS[x.sec][n])ALIAS[x.sec][n]=x.k})});
+function resolveType(sec,raw){
+  const n=normKey(raw);if(!n)return null;
+  if(sec)return ALIAS[sec][n]||null;
+  return ALIAS.LR[n]||ALIAS.RC[n]||null;
+}
+function normSec(v){const n=normKey(v);
+  if(["lr","logicalreasoning","逻辑","逻辑推理"].includes(n))return "LR";
+  if(["rc","readingcomprehension","reading","阅读","阅读理解"].includes(n))return "RC";
+  return null}
+function normDiffWord(v){
+  if(v==null||v==="")return null;
+  if(typeof v==="number"||/^\d+(\.\d+)?$/.test(String(v).trim()))return {num:+v};
+  const n=normKey(v);
+  if(["easy","e","易","简单","低","容易"].includes(n))return 1;
+  if(["medium","med","m","中","中等","一般","适中"].includes(n))return 2;
+  if(["hard","h","难","困难","高","difficult","veryhard","较难"].includes(n))return 3;
+  const stars=(String(v).match(/[★⭐*]/g)||[]).length;if(stars)return {num:stars,five:true};
+  return null;
+}
+function normAnswer(v,nch){
+  if(v==null||v==="")return null;
+  if(typeof v==="number")return Number.isInteger(v)&&v>=0&&v<nch?v:null;
+  const s=String(v).trim().toUpperCase().replace(/[()（）\s.]/g,"");
+  if(/^[A-E]$/.test(s)){const i="ABCDE".indexOf(s);return i<nch?i:null}
+  if(/^[1-5]$/.test(s)){const i=+s-1;return i<nch?i:null}
+  return null;
+}
+const FIELD={sec:["section","sec","科目","部分"],t:["type","qtype","questiontype","题型","类型"],d:["difficulty","diff","level","难度","difficultylevel"],
+  stim:["stimulus","passage","stem","text","题干","文章","材料","刺激"],q:["question","prompt","questionstem","问题","问"],
+  a:["answer","ans","correct","correctanswer","key","答案","正确答案"],ex:["explanation","explain","rationale","analysis","解析","解释"],ch:["choices","options","answers","选项"]};
+function getF(o,keys){for(const k of Object.keys(o)){if(keys.includes(normKey(k)))return o[k]}return undefined}
+function rowToQ(o){
+  let ch=getF(o,FIELD.ch);
+  if(!Array.isArray(ch)){ch=[];for(const LL of "ABCDE"){const v=Object.keys(o).find(k=>{const n=normKey(k),l=LL.toLowerCase();return n===l||n==="choice"+l||n==="option"+l||n==="选项"+l});if(v!=null&&String(o[v]).trim()!=="")ch.push(String(o[v]).trim())}}
+  ch=ch.map(c=>String(c).replace(/^\s*\(?[A-E][).]\s*/,"").trim()).filter(Boolean).slice(0,5);
+  const rawT=getF(o,FIELD.t);
+  let sec=normSec(getF(o,FIELD.sec));
+  let tk=resolveType(sec,rawT);
+  if(!sec&&tk)sec=ALIAS.LR[normKey(rawT)]?"LR":"RC";
+  const stim=String(getF(o,FIELD.stim)??"").trim();
+  if(!sec)sec=stim.length>1200?"RC":"LR";
+  if(!tk)tk=resolveType(sec,rawT);
+  return {sec,t:tk||null,_d:normDiffWord(getF(o,FIELD.d)),stim,q:String(getF(o,FIELD.q)??"").trim(),ch,a:normAnswer(getF(o,FIELD.a),ch.length),ex:String(getF(o,FIELD.ex)??"").trim()};
+}
+function finalizeDiff(list){
+  const nums=list.map(q=>q._d).filter(d=>d&&typeof d==="object"&&!d.five).map(d=>d.num);
+  const five=nums.some(n=>n>3);
+  list.forEach(q=>{const d=q._d;
+    if(d==null)q.d=null;else if(typeof d==="number")q.d=d;
+    else{const n=d.num;q.d=(five||d.five)?(n<=2?1:n<3.5?2:3):(n<=1?1:n<=2?2:3)}
+    delete q._d});
+  return list;
+}
+function parseCSV(text){
+  const first=text.split("\n")[0];
+  const delim=(first.match(/\t/g)||[]).length>(first.match(/,/g)||[]).length?"\t":",";
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===delim){row.push(f);f=""}
+    else if(c==="\n"||c==="\r"){if(c==="\r"&&text[i+1]==="\n")i++;row.push(f);rows.push(row);row=[];f=""}
+    else f+=c}
+  if(f!==""||row.length){row.push(f);rows.push(row)}
+  const clean=rows.filter(r=>r.some(c=>c.trim()!==""));
+  if(clean.length<2)return [];
+  const head=clean[0].map(h=>h.replace(/^﻿/,"").trim());
+  return clean.slice(1).map(r=>Object.fromEntries(head.map((h,i)=>[h,r[i]??""])));
+}
+function parseLocal(text,name){
+  const s=text.trim();
+  if(/\.json$/i.test(name)||s.startsWith("[")||s.startsWith("{")){
+    let j=JSON.parse(s);if(!Array.isArray(j))j=j.questions||j.questionBank||j.items||j.data||[j];
+    return finalizeDiff(j.filter(x=>x&&typeof x==="object").map(x=>x.ch&&x.q?{sec:x.sec==="RC"?"RC":"LR",t:resolveType(x.sec==="RC"?"RC":"LR",x.t),_d:[1,2,3].includes(+x.d)?+x.d:null,stim:String(x.stim||""),q:String(x.q),ch:x.ch.slice(0,5).map(String),a:normAnswer(x.a,x.ch.length),ex:typeof x.ex==="string"?x.ex:""}:rowToQ(x)));
+  }
+  return finalizeDiff(parseCSV(text).map(rowToQ));
+}
+const CODES_TEXT="LR codes: "+typesOf("LR").map(x=>`${x.k} (${x.en})`).join(", ")+". RC codes: "+typesOf("RC").map(x=>`${x.k} (${x.en})`).join(", ")+".";
+const DIFF_TEXT='Difficulty "d": 1 = easy (like the first third of a real LSAT LR section), 2 = medium, 3 = hard (like the hardest fifth of real LSAT questions).';
+function parsePrompt(text,forImages,key){
+  return `You extract LSAT multiple-choice questions for a student's personal practice bank.
+${forImages?"The attached images are pages or screenshots containing LSAT questions.":"The text below contains LSAT questions (it may be copied from a PDF, with messy line breaks)."}
+For every complete question, copy the stimulus (for Reading Comprehension: the full passage), the question stem, and the answer choices verbatim, fixing only broken line breaks. If an answer key or explanation appears, include it; otherwise use null.
+Classify each: "sec" is "LR" or "RC"; "t" is one type code. ${CODES_TEXT}
+${DIFF_TEXT}
+Reply with only a JSON array, for example:
+[{"sec":"LR","t":"Flaw","d":2,"stim":"...","q":"The reasoning is flawed because the argument","ch":["...","...","...","...","..."],"a":"C","ex":null}]
+If there are no complete questions, reply [].${key?"\n\nANSWER KEY (from elsewhere in the same document; when question numbers and sections match, use it to fill \"a\" and \"ex\"):\n"+key.slice(0,8000):""}${forImages?"":"\n\nTEXT:\n"+text}`;
+}
+function classifyPrompt(list){
+  return `You are an LSAT expert. Classify each question below by section, question type and difficulty.
+"sec" is "LR" or "RC"; "t" is one type code. ${CODES_TEXT}
+${DIFF_TEXT}
+Reply with only a JSON array with one object per question, for example: [{"i":0,"sec":"LR","t":"NA","d":2}]
+
+${list.map((q,i)=>`[${i}]\nSTIMULUS: ${(q.stim||"").slice(0,2500)}\nQUESTION: ${q.q}\nCHOICES: ${q.ch.map((c,j)=>"("+"ABCDE"[j]+") "+c).join(" ")}`).join("\n\n")}`;
+}
+function aiRowsToQ(arr){
+  if(!Array.isArray(arr))return [];
+  return finalizeDiff(arr.filter(x=>x&&typeof x==="object").map(x=>{
+    const ch=(Array.isArray(x.ch)?x.ch:[]).map(c=>String(c).replace(/^\s*\(?[A-E][).]\s*/,"").trim()).filter(Boolean).slice(0,5);
+    const sec=x.sec==="RC"?"RC":"LR";
+    return {sec,t:resolveType(sec,x.t),_d:[1,2,3].includes(+x.d)?+x.d:null,stim:String(x.stim||"").trim(),q:String(x.q||"").trim(),ch,a:normAnswer(x.a,ch.length),ex:String(x.ex||"").trim()};
+  }));
+}
+function splitText(s,max=12000){
+  const paras=s.split(/\n\s*\n/);const out=[];let cur="";
+  paras.forEach(p=>{if((cur+"\n\n"+p).length>max&&cur){out.push(cur);cur=p}else cur=cur?cur+"\n\n"+p:p});
+  if(cur)out.push(cur);
+  return out.flatMap(c=>c.length>max*1.5?c.match(new RegExp(`[\\s\\S]{1,${max}}`,"g")):[c]);
+}
+const aiErr=e=>{const k="ai."+(e?.code||"other");return I18N.zh[k]?t(k):t("ai.other")};
+let aiCtl=null;
+async function aiParseText(text,key){
+  const parts=splitText(text);let all=[];aiCtl=new AbortController();$("#impStop").hidden=false;
+  try{for(let i=0;i<parts.length;i++){
+    impMsg(t("m.ai",{p:parts.length>1?t("m.part",{i:i+1,n:parts.length}):""}));
+    const arr=await state.ai.json(parsePrompt(parts[i],false,key),{signal:aiCtl.signal});all=all.concat(aiRowsToQ(arr));}
+    return all}
+  finally{$("#impStop").hidden=true;aiCtl=null}
+}
+async function aiParseImages(files,key){
+  const max=state.aiImg||1;let all=[];aiCtl=new AbortController();$("#impStop").hidden=false;
+  try{for(let i=0;i<files.length;i+=max){
+    impMsg(t("m.ai",{p:files.length>max?t("m.imgPart",{a:i+1,b:Math.min(i+max,files.length),n:files.length}):""}));
+    const arr=await state.ai.json(parsePrompt("",true,key),{images:files.slice(i,i+max),signal:aiCtl.signal});all=all.concat(aiRowsToQ(arr));}
+    return all}
+  finally{$("#impStop").hidden=true;aiCtl=null}
+}
+async function aiClassify(list,onProgress){
+  for(let i=0;i<list.length;i+=8){
+    const batch=list.slice(i,i+8);onProgress&&onProgress(i,list.length);
+    const res=await state.ai.json(classifyPrompt(batch),{modelTier:"quick"});
+    (Array.isArray(res)?res:[]).forEach(r=>{const q=batch[+r.i];if(!q)return;const sec=r.sec==="RC"?"RC":r.sec==="LR"?"LR":q.sec;
+      if(!q.t){q.sec=sec;q.t=resolveType(sec,r.t)}
+      if(!q.d&&[1,2,3].includes(+r.d))q.d=+r.d});
+  }
+}
+function impMsg(s,err){const m=$("#impMsg");m.textContent=s;m.className="toast"+(err?" err":"")}
+$("#impStop").addEventListener("click",()=>aiCtl&&aiCtl.abort());
+const aiCatch=e=>{if(e?.code==="cancelled")impMsg(t("m.stopped"));else impMsg(aiErr(e),true)};
+
+let pending=null;
+function showPreview(list,name){
+  const valid=list.filter(q=>q.q&&q.ch.length>=2&&q.a!=null);
+  const noAns=list.filter(q=>q.q&&q.ch.length>=2&&q.a==null).length,bad=list.length-valid.length-noAns;
+  if(!valid.length){impMsg(list.length?t("m.noAns",{n:list.length}):t("m.noQs"),true);return}
+  pending={qs:valid,name,noAns,bad};
+  $("#pvAi").checked=!!prefs.autoAi;
+  $("#pvName").value=name||t("m.import",{d:new Date().toLocaleDateString(locale())});
+  $("#pvMsg").textContent="";$("#preview").hidden=false;impMsg("");
+  renderPreview();
+  $("#preview").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderPreview(){
+  if(!pending)return;const v=pending.qs;
+  const lr=v.filter(q=>q.sec==="LR").length,miss=v.filter(q=>!q.t||!q.d).length,noT=v.filter(q=>!q.t).length;
+  $("#pvSub").textContent=t("pv.sub",{n:v.length,lr,rc:v.length-lr,a:v.filter(q=>q.d===1).length,b:v.filter(q=>q.d===2).length,c:v.filter(q=>q.d===3).length,u:v.filter(q=>!q.d).length});
+  $("#pvWarn").textContent=[pending.noAns?t("pv.noAns",{n:pending.noAns}):"",pending.bad>0?t("pv.bad",{n:pending.bad}):"",noT?t("pv.noType",{n:noT}):""].filter(Boolean).join(" ");
+  $("#pvAiTxt").textContent=t("pv.ai",{n:miss});$("#pvAiWrap").hidden=!(miss&&state.ai);
+  $("#pvRows").innerHTML=v.slice(0,6).map(q=>`<tr><td><div class="snip">${esc(q.q||q.stim)}</div></td><td>${q.sec}</td><td>${q.t?tName(q.sec,q.t):`<span class="tiny">${t("pv.unrec")}</span>`}</td><td>${q.d?`<span class="pill d${q.d}">${dName(q.d)}</span>`:`<span class="tiny">${t("d.0")}</span>`}</td><td class="n">${"ABCDE"[q.a]}</td></tr>`).join("")+(v.length>6?`<tr><td colspan="5" class="tiny">${t("pv.more",{n:v.length-6})}</td></tr>`:"");
+}
+$("#pvCancel").addEventListener("click",()=>{pending=null;$("#preview").hidden=true});
+$("#pvGo").addEventListener("click",async()=>{
+  if(!pending)return;const btn=$("#pvGo");btn.disabled=true;const msg=$("#pvMsg");msg.className="toast";
+  try{
+    const qs=pending.qs;
+    if(state.ai&&$("#pvAi").checked&&!$("#pvAiWrap").hidden){
+      const need=qs.filter(q=>!q.t||!q.d);
+      try{await aiClassify(need,(i,n)=>msg.textContent=t("pv.aiFilling",{i,n}))}catch(e){msg.textContent=aiErr(e)+t("pv.aiFail")}
+    }
+    const setId="set"+Date.now().toString(36);const at=Date.now();
+    const chunks=[];let cur=[],size=0;
+    qs.forEach((q,i)=>{const item={id:setId+"-"+i,sec:q.sec,t:q.t,d:q.d,stim:q.stim,q:q.q,ch:q.ch.slice(0,5),a:q.a,ex:q.ex||""};
+      const sz=JSON.stringify(item).length;if(cur.length&&(size+sz>150000||cur.length>=60)){chunks.push(cur);cur=[];size=0}cur.push(item);size+=sz});
+    if(cur.length)chunks.push(cur);
+    for(let p=0;p<chunks.length;p++){msg.textContent=t("pv.saving",{i:p+1,n:chunks.length});
+      await store.putChunk({id:setId+"-p"+p,set:setId,setName:$("#pvName").value.trim()||t("pv.unnamed"),part:p,at,qs:chunks[p]})}
+    msg.textContent=t("pv.done",{n:qs.length});pending=null;
+    setTimeout(()=>{$("#preview").hidden=true},1500);
+  }catch(e){msg.className="toast err";msg.textContent=e&&e.code==="quota_exceeded"?t("pv.quota"):t("pv.fail")}
+  finally{btn.disabled=false}
+});
+/* ---- PDF ---- */
+let pdfDoc=null,pdfFile="";
+const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error("load"));document.head.appendChild(s)})}
+async function getPdfjs(){
+  if(window.pdfjsLib)return window.pdfjsLib;
+  await loadScript(PDFJS+"pdf.worker.min.js");await loadScript(PDFJS+"pdf.min.js");
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";return window.pdfjsLib;
+}
+async function openPdf(file){
+  if(!state.ai){impMsg(t("m.pdfNoAi"),true);return}
+  impMsg(t("m.pdfOpening"));
+  try{const lib=await getPdfjs();pdfDoc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise}
+  catch(e){impMsg(e&&e.name==="PasswordException"?t("m.pdfPwd"):t("m.pdfBad"),true);return}
+  pdfFile=file.name.replace(/\.pdf$/i,"");const n=pdfDoc.numPages;
+  $("#pdfName").textContent=file.name;$("#pdfInfo").textContent=t("b.pdfInfo",{n});
+  $("#pdfFrom").value=1;$("#pdfTo").value=Math.min(n,20);$("#keyFrom").value="";$("#keyTo").value="";
+  $("#pdfBox").hidden=false;impMsg("");
+}
+async function pageText(n){const p=await pdfDoc.getPage(n);const tc=await p.getTextContent();return tc.items.map(i=>(i.str||"")+(i.hasEOL?"\n":"")).join("")}
+async function pageImage(n){
+  const p=await pdfDoc.getPage(n);const w=p.getViewport({scale:1}).width;const vp=p.getViewport({scale:Math.min(2.2,1300/w)});
+  const c=document.createElement("canvas");c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+  await p.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+  return await new Promise(r=>c.toBlob(r,"image/jpeg",0.85));
+}
+$("#pdfCancel").addEventListener("click",()=>{pdfDoc=null;$("#pdfBox").hidden=true;impMsg("")});
+$("#pdfGo").addEventListener("click",async()=>{
+  if(!pdfDoc)return;const N=pdfDoc.numPages;
+  const from=+$("#pdfFrom").value,to=+$("#pdfTo").value;
+  if(!(from>=1&&to>=from&&to<=N)){impMsg(t("m.pdfRange",{n:N}),true);return}
+  if(to-from+1>40){impMsg(t("m.pdf40"),true);return}
+  const kf=+$("#keyFrom").value,kt=+$("#keyTo").value||kf;
+  if(kf&&!(kf>=1&&kt>=kf&&kt<=N&&kt-kf<10)){impMsg(t("m.pdfKey"),true);return}
+  const b=$("#pdfGo");b.disabled=true;
+  try{
+    impMsg(t("m.pdfText"));
+    let text="",key="";
+    for(let n=from;n<=to;n++)text+=`\n\n[Page ${n}]\n`+await pageText(n);
+    if(kf)for(let n=kf;n<=kt;n++)key+="\n"+await pageText(n);
+    const scanned=text.replace(/\[Page \d+\]|\s/g,"").length<(to-from+1)*80;
+    let qs;
+    if(scanned){
+      if(!state.aiImg){impMsg(t("m.pdfScanNoImg"),true);return}
+      if(to-from+1>12){impMsg(t("m.pdfScan12"),true);return}
+      const imgs=[];for(let n=from;n<=to;n++){impMsg(t("m.pdfConv",{n}));imgs.push(await pageImage(n))}
+      qs=await aiParseImages(imgs,key.trim());
+    }else qs=await aiParseText(text,key.trim());
+    showPreview(qs,t("m.pdfName",{f:pdfFile,a:from,b:to}));
+  }catch(e){if(e?.code)aiCatch(e);else impMsg(t("m.pdfErr"),true)}
+  finally{b.disabled=false}
+});
+async function handleFile(file){
+  if(!file)return;
+  if(/\.pdf$/i.test(file.name)||file.type==="application/pdf"){await openPdf(file);return}
+  impMsg(t("m.reading"));
+  const text=await file.text();
+  if(/\.txt$/i.test(file.name)&&!/^\s*[\[{]/.test(text)){
+    if(!state.ai){impMsg(t("m.txtNoAi"),true);return}
+    try{showPreview(await aiParseText(text),file.name.replace(/\.\w+$/,""))}catch(e){aiCatch(e)}
+    return;
+  }
+  try{showPreview(parseLocal(text,file.name),file.name.replace(/\.\w+$/,""))}
+  catch(e){impMsg(t("m.parseFail",{m:e.message||"?"}),true)}
+}
+$("#fileIn").addEventListener("change",e=>{handleFile(e.target.files[0]);e.target.value=""});
+const dz=$("#imp-file");
+dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("over")});
+dz.addEventListener("dragleave",()=>dz.classList.remove("over"));
+dz.addEventListener("drop",e=>{e.preventDefault();dz.classList.remove("over");handleFile(e.dataTransfer.files[0])});
+$("#pasteGo").addEventListener("click",async()=>{
+  const s=$("#pasteIn").value.trim();if(!s){impMsg(t("m.pasteEmpty"),true);return}
+  if(/^[\[{]/.test(s)||/^[^\n]*(section|question|题干)[^\n]*,/i.test(s)){try{showPreview(parseLocal(s,""),t("m.paste"));return}catch(e){}}
+  if(!state.ai){impMsg(t("m.pasteNoAi"),true);return}
+  const b=$("#pasteGo");b.disabled=true;
+  try{showPreview(await aiParseText(s),t("m.paste"))}catch(e){aiCatch(e)}finally{b.disabled=false}
+});
+$("#imgIn").addEventListener("change",async e=>{
+  const files=[...e.target.files];e.target.value="";if(!files.length)return;
+  try{showPreview(await aiParseImages(files),t("m.img"))}catch(err){aiCatch(err)}
+});
+document.querySelectorAll("[data-imp]").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("[data-imp]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  ["file","paste","image"].forEach(k=>$("#imp-"+k).hidden=k!==b.dataset.imp);
+  if(b.dataset.imp!=="file")$("#pdfBox").hidden=true;
+}));
+document.querySelectorAll("[data-copy]").forEach(b=>b.addEventListener("click",async()=>{
+  const el=$("#"+b.dataset.copy);
+  try{await navigator.clipboard.writeText(el.textContent);$("#copyMsg").textContent=t("b.copied")}
+  catch(e){el.hidden=false;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);$("#copyMsg").textContent=t("b.selected")}
+}));
+function applyAiUi(){
+  $("#pasteNote").textContent=state.ai?t("b.pasteAi"):t("b.pasteNoAi");
+  document.querySelector('[data-imp="image"]').hidden=!(state.ai&&state.aiImg);
+  $("#imgLead").textContent=t("b.imgLead",{n:state.aiImg||1});
+}
+
+/* =================== bank: list & edit =================== */
+const bankView={diff:"all",q:""};
+function renderBankAll(){renderBankSummary();renderBankList()}
+function renderBankSummary(){
+  const u=userQuestions(),qs=bankQs();
+  $("#bankBanner").hidden=!!u.length||state.mode==="loading";
+  const c={1:0,2:0,3:0,0:0};qs.forEach(q=>c[q.d||0]++);
+  const lr=qs.filter(q=>q.sec==="LR").length;
+  $("#bankSub").textContent=t("b.sub",{s:u.length?"":t("b.subSample"),n:qs.length,lr,rc:qs.length-lr});
+  const segs=[[1,"var(--good)"],[2,"var(--warn)"],[3,"var(--bad)"],[0,"var(--rule)"]];
+  $("#bankDist").innerHTML=`<div class="distbar">${segs.map(([k,col])=>c[k]?`<i style="width:${c[k]/qs.length*100}%;background:${col}"></i>`:"").join("")}</div>
+    <div class="legend">${segs.map(([k,col])=>`<span style="--c:${col}">${dName(k)} ${c[k]}</span>`).join("")}</div>`;
+  const sets={};state.chunks.forEach(ch=>{const s=sets[ch.set]||(sets[ch.set]={name:ch.setName,at:ch.at,n:0});s.n+=(ch.qs||[]).length});
+  $("#setList").innerHTML=Object.entries(sets).sort((a,b)=>b[1].at-a[1].at).map(([id,s])=>`<div class="setrow"><span><b>${esc(s.name)}</b> <span class="tiny">${t("b.setMeta",{n:s.n,d:new Date(s.at).toLocaleDateString(locale())})}</span></span><button class="btn danger sm" data-delset="${esc(id)}">${t("c.del")}</button></div>`).join("");
+  const missing=u.filter(q=>!q.t||!q.d).length;
+  const ab=$("#aiFill");ab.hidden=!(state.ai&&missing);ab.textContent=t("b.aiFill",{n:missing});
+}
+function renderBankList(){
+  const qs=bankQs();const s=bankView.q.toLowerCase();
+  let list=qs.filter(q=>bankView.diff==="all"||String(q.d||0)===bankView.diff);
+  if(s)list=list.filter(q=>(q.q+" "+q.stim).toLowerCase().includes(s));
+  const editable=!usingSampleBank(),en=prefs.lang==="en";
+  const typeOpts=q=>`<option value="">${t("c.untagged")}</option>`+typesOf(q.sec).map(x=>`<option value="${x.k}" ${q.t===x.k?"selected":""}>${en?x.en:x.zh}</option>`).join("");
+  $("#bkRows").innerHTML=list.slice(0,100).map(q=>{const st=state.qstats[q.id];
+    return `<tr><td><div class="snip">${esc(q.q)}</div><div class="tiny snip">${esc((q.stim||"").slice(0,140))}</div></td><td>${q.sec}</td>
+    <td>${editable?`<select data-edit="t" data-id="${esc(q.id)}" aria-label="${t("col.type")}">${typeOpts(q)}</select>`:(q.t?tName(q.sec,q.t):"—")}</td>
+    <td>${editable?`<select data-edit="d" data-id="${esc(q.id)}" aria-label="${t("col.diff")}"><option value="">${t("d.0")}</option>${[1,2,3].map(d=>`<option value="${d}" ${q.d===d?"selected":""}>${dName(d)}</option>`).join("")}</select>`:(q.d?`<span class="pill d${q.d}">${dName(q.d)}</span>`:"—")}</td>
+    <td class="n">${st?t("b.tries",{n:st.n})+(st.last===0?` · <span class="down">${t("b.lastWrong")}</span>`:""):"—"}</td></tr>`}).join("")||`<tr><td colspan="5" class="empty">${t("b.none")}</td></tr>`;
+  $("#bkMore").textContent=list.length>100?t("b.more",{n:list.length}):"";
+}
+document.querySelectorAll("#bkDiff button").forEach(b=>b.addEventListener("click",()=>{bankView.diff=b.dataset.v;document.querySelectorAll("#bkDiff button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderBankList()}));
+let sTimer;$("#bkSearch").addEventListener("input",e=>{clearTimeout(sTimer);sTimer=setTimeout(()=>{bankView.q=e.target.value.trim();renderBankList()},250)});
+$("#bkRows").addEventListener("change",async e=>{
+  const el=e.target.closest("[data-edit]");if(!el)return;
+  const id=el.dataset.id,ch=state.chunks.find(c=>(c.qs||[]).some(q=>q.id===id));if(!ch)return;
+  const qs=ch.qs.map(q=>q.id===id?{...q,[el.dataset.edit]:el.dataset.edit==="d"?(el.value?+el.value:null):(el.value||null)}:q);
+  const m=$("#bkMsg");m.className="toast";m.textContent=t("c.saving");
+  try{await store.putChunk({...ch,qs});m.textContent=t("c.saved")}catch(err){m.className="toast err";m.textContent=t("c.saveFail")}
+});
+let armedSet=null;
+$("#setList").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-delset]");if(!b)return;
+  if(armedSet!==b){armedSet=b;b.textContent=t("b.confirmSet");setTimeout(()=>{if(armedSet===b){b.textContent=t("c.del");armedSet=null}},3000);return}
+  armedSet=null;b.disabled=true;
+  try{for(const c of state.chunks.filter(c=>c.set===b.dataset.delset))await store.delChunk(c.id)}catch(err){b.disabled=false;b.textContent=t("c.delFail")}
+});
+$("#aiFill").addEventListener("click",async()=>{
+  const b=$("#aiFill"),m=$("#bkMsg");b.disabled=true;m.className="toast";
+  const need=userQuestions().filter(q=>!q.t||!q.d).map(q=>({...q}));
+  try{
+    await aiClassify(need,(i,n)=>m.textContent=t("b.aiRating",{i,n}));
+    const byChunk={};need.forEach(q=>{(byChunk[q._c]=byChunk[q._c]||{})[q.id]=q});
+    for(const [cid,map] of Object.entries(byChunk)){const ch=state.chunks.find(c=>c.id===cid);if(!ch)continue;
+      await store.putChunk({...ch,qs:ch.qs.map(q=>map[q.id]?{...q,t:map[q.id].t||q.t,d:map[q.id].d||q.d,sec:map[q.id].sec||q.sec}:q)})}
+    m.textContent=t("b.aiDone");
+  }catch(e){m.className="toast err";m.textContent=aiErr(e)}
+  finally{b.disabled=false}
+});
+
+/* =================== log form =================== */
+const form={misses:[],reason:"misread",sec:"LR"};
+function renderPickers(){
+  $("#reasonPick").innerHTML=REASON_KEYS.map(k=>`<button type="button" data-reason="${k}" aria-pressed="${form.reason===k}">${rName(k)}</button>`).join("");
+  const counts={};form.misses.forEach(m=>{if(m.s===form.sec)counts[m.t]=(counts[m.t]||0)+1});
+  $("#typePick").innerHTML=typesOf(form.sec).map(x=>`<button type="button" class="bub${counts[x.k]?" on":""}" data-type="${x.k}"><span class="c">${counts[x.k]||""}</span>${tName(x.sec,x.k)}</button>`).join("");
+  $("#missCount").textContent=t("log.logged",{n:form.misses.length});
+  $("#missList").innerHTML=form.misses.map((m,i)=>`<span class="misschip">${m.s} · ${tName(m.s,m.t)} · ${rName(m.r)}<button type="button" data-rm="${i}" aria-label="${t("log.remove")}">×</button></span>`).join("");
+}
+function resetForm(){
+  $("#form").reset();$("#f-date").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+  form.misses=[];renderPickers();
+}
+$("#reasonPick").addEventListener("click",e=>{const b=e.target.closest("[data-reason]");if(!b)return;form.reason=b.dataset.reason;renderPickers()});
+$("#typePick").addEventListener("click",e=>{const b=e.target.closest("[data-type]");if(!b)return;form.misses.push({s:form.sec,t:b.dataset.type,r:form.reason});renderPickers()});
+$("#missList").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;form.misses.splice(+b.dataset.rm,1);renderPickers()});
+document.querySelectorAll("[data-fsec]").forEach(b=>b.addEventListener("click",()=>{form.sec=b.dataset.fsec;document.querySelectorAll("[data-fsec]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderPickers()}));
+$("#resetBtn").addEventListener("click",resetForm);
+$("#form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const num=id=>{const v=$(id).value;return v===""?0:Math.max(0,+v)};
+  const r={id:"t"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:$("#f-date").value,kind:$("#f-kind").value,source:$("#f-source").value.trim(),
+    score:$("#f-score").value?Math.min(180,Math.max(120,+$("#f-score").value)):null,
+    lrc:num("#f-lrc"),lrt:num("#f-lrt"),rcc:num("#f-rcc"),rct:num("#f-rct"),misses:form.misses.slice(),notes:$("#f-notes").value.trim(),createdAt:Date.now()};
+  const toast=$("#toast");toast.className="toast";
+  if(r.lrc>r.lrt||r.rcc>r.rct){toast.className="toast err";toast.textContent=t("log.errCount");return}
+  if(!r.lrt&&!r.rct&&!r.misses.length){toast.className="toast err";toast.textContent=t("log.errEmpty");return}
+  const btn=$("#saveBtn");btn.disabled=true;
+  try{await store.add(r);toast.textContent=t("log.saved");resetForm()}
+  catch(err){toast.className="toast err";toast.textContent=err&&err.code==="quota_exceeded"?t("log.errQuota"):t("log.errSave")}
+  finally{btn.disabled=false}
+});
+
+/* =================== settings =================== */
+function renderPrefs(){
+  document.querySelectorAll("#prefLang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===prefs.lang));
+  document.querySelectorAll("#prefCount button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.v===prefs.count));
+  $("#prefShow").setAttribute("aria-checked",!!prefs.showType);
+  $("#prefAi").setAttribute("aria-checked",!!prefs.autoAi);
+  if(document.activeElement!==$("#prefPace"))$("#prefPace").value=prefs.pace;
+  setStatus(state.statusKey,state.statusVars);
+}
+let prefMsgTimer;
+async function savePrefs(patch){
+  const langChanged=patch.lang&&patch.lang!==prefs.lang;
+  prefs={...prefs,...patch};
+  try{localStorage.setItem(PREF_KEY,JSON.stringify(prefs))}catch(e){}
+  syncDrillDefaults();
+  if(langChanged)rerenderAll();else{renderPrefs();if(!quiz)renderDrill()}
+  const m=$("#prefSaved");
+  try{if(store)await store.setPrefs(prefs);m.textContent=t("s.saved")}catch(e){m.textContent=t("c.saveFail")}
+  clearTimeout(prefMsgTimer);prefMsgTimer=setTimeout(()=>m.textContent="",2500);
+}
+document.querySelectorAll("#prefLang button").forEach(b=>b.addEventListener("click",()=>savePrefs({lang:b.dataset.lang})));
+document.querySelectorAll("#prefCount button").forEach(b=>b.addEventListener("click",()=>savePrefs({count:+b.dataset.v})));
+$("#prefShow").addEventListener("click",()=>savePrefs({showType:!prefs.showType}));
+$("#prefAi").addEventListener("click",()=>savePrefs({autoAi:!prefs.autoAi}));
+let paceTimer;$("#prefPace").addEventListener("input",e=>{clearTimeout(paceTimer);paceTimer=setTimeout(()=>{const v=Math.round(+e.target.value);if(v>=20&&v<=600&&v!==prefs.pace)savePrefs({pace:v})},600)});
+$("#exportBtn").addEventListener("click",async()=>{
+  const m=$("#exportMsg");m.className="toast";m.textContent="";
+  const payload={app:"lsat-analysis",exportedAt:new Date().toISOString(),settings:prefs,target:state.target,records:state.records,questionBank:userQuestions().map(({_c,_set,...q})=>q),practiceStats:state.qstats};
+  const fname=`lsat-backup-${new Date().toISOString().slice(0,10)}.json`,body=JSON.stringify(payload,null,2);
+  if(!state.dl){if(window.claude){m.className="toast err";m.textContent=t("s.exportNo");return}
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([body],{type:"application/json"}));a.download=fname;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);m.textContent=t("s.exported");return}
+  try{const r=await state.dl.save({filename:fname,data:body});if(r&&r.status==="saved")m.textContent=t("s.exported")}
+  catch(e){if(e?.code!=="cancelled"&&e?.code!=="declined"){m.className="toast err";m.textContent=t("s.exportFail")}}
+});
+
+/* =================== misc & routing =================== */
+document.querySelectorAll("[data-chart]").forEach(b=>b.addEventListener("click",()=>{state.chart=b.dataset.chart;document.querySelectorAll("[data-chart]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderChart(data())}));
+document.querySelectorAll("[data-sec]").forEach(b=>b.addEventListener("click",()=>{state.sec=b.dataset.sec;document.querySelectorAll("[data-sec]").forEach(x=>x.setAttribute("aria-pressed",x===b));renderTypes(data())}));
+let tTimer;$("#target").addEventListener("input",e=>{clearTimeout(tTimer);tTimer=setTimeout(()=>{const v=e.target.value?Math.min(180,Math.max(120,+e.target.value)):null;if(v!==state.target&&store)store.setTarget(v).catch(()=>{});state.target=v;render()},700)});
+let armed=null;
+$("#hist").addEventListener("click",async e=>{const b=e.target.closest("[data-del]");if(!b)return;
+  if(armed!==b){if(armed)armed.textContent=t("c.del");armed=b;b.textContent=t("c.confirmDel");setTimeout(()=>{if(armed===b){b.textContent=t("c.del");armed=null}},3000);return}
+  armed=null;b.disabled=true;try{await store.remove(b.dataset.del)}catch(err){b.disabled=false;b.textContent=t("c.delFail")}});
+
+const VIEWS=["overview","drill","guide","bank","log","history","prefs"];
+const viewIs=v=>!$("#v-"+v).hidden;
+function route(){
+  const h=location.hash.slice(1);
+  const v=h.startsWith("g-")?"guide":VIEWS.includes(h)?h:"overview";
+  VIEWS.forEach(n=>$("#v-"+n).hidden=n!==v);
+  document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.dataset.view===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  document.querySelectorAll(".tcard.flash").forEach(c=>c.classList.remove("flash"));
+  if(h.startsWith("g-")){const el=document.getElementById(h);if(el){el.classList.add("flash");requestAnimationFrame(()=>el.scrollIntoView({block:"start"}))}}
+  if(v==="drill")renderDrill();
+}
+addEventListener("hashchange",route);
+function rerenderAll(){
+  applyStatic();applyAiUi();renderPickers();render();renderGuide();renderBankAll();renderPreview();renderDrill();renderPrefs();
+}
+
+applyStatic();resetForm();rerenderAll();route();initStore();
+</script>
+
+</body>
+</html>
