@@ -363,6 +363,13 @@ nav.tabs a svg{width:16px;height:16px;flex:none;opacity:.85}
   .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
   .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+.aibox{display:grid;gap:10px;border-top:1px dashed var(--rule);padding-top:12px}
+.aiout{white-space:pre-wrap;font-size:14px;line-height:1.75;background:var(--drop-soft);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;min-width:0;overflow-wrap:anywhere}
+.aiout b{color:var(--drop-hi)}
+.aiq{color:var(--muted);font-size:13px;padding-left:4px}
+.aiask{display:flex;gap:8px}.aiask input{flex:1}
+.btn svg{width:14px;height:14px;vertical-align:-2px;margin-right:6px}
 </style>
 </head>
 <body>
@@ -679,7 +686,7 @@ zh:{
 "pi.title":"平时最弱在哪","pi.sub":"根据逐题数据自动生成","pi.weak":"<b>{name}</b> 正确率 {p}%（{n} 题）","pi.weakD":"比你的平均低 {g} 个百分点。","pi.drop":"难度到<b>{d}</b>时正确率明显下降","pi.dropD":"从 {a}% 掉到 {b}%。先把{prev}题做稳，再多加难度。","pi.hardOk":"难题也能做对 {p}%","pi.hardOkD":"可以多刷难题。","pi.slow":"<b>{name}</b> 做得慢","pi.slowD":"平均每题 {t}，比目标慢 {s} 秒。","pi.trend":"最近 7 天正确率 {a}%","pi.trendUp":"比前 7 天高 {d} 个百分点。","pi.trendDown":"比前 7 天低 {d} 个百分点。","pi.imp":"进步最大：{name}","pi.impD":"正确率提高了 {d} 个百分点。","pi.none":"刷几组题后，这里会显示你的薄弱点。","pi.practice":"练这类 →",
 "pr.title":"日常练习 · 总正确率","pr.week":"近 7 天 {p}","pr.outer":"外环：总正确率","pr.inner":"内环：近 7 天","pt.title":"各题型正确率","pt.sub":"从低到高排列 · 少于 3 题的放在最后 · 箭头对比较早和较晚的一半题","pt.colType":"题型","pt.colAcc":"正确率","pt.colTime":"用时","pt.few":"题少","pt.none":"还没有这一科的刷题数据。","pt.go":"练","pt.n":"{n} 题",
 "pd.title":"难度与科目","pd.sub":"正确率 · 题数 · 平均用时","pd.diff":"按难度","pd.sec":"按科目","pd.reasons":"刷题错因","pd.noReasons":"做错时标一下原因，这里就会统计。",
-"side.foot":"<b>刷题快捷键</b><br>A–E 选择答案 · Enter 确认 / 下一题","s.theme":"外观","s.themeSub":"白昼模式适合白天和明亮环境，黑夜模式更护眼。跟随系统会随电脑的深浅色设置自动切换。","s.light":"白昼","s.dark":"黑夜","s.system":"跟随系统","m.toLight":"切到白昼","m.toDark":"切到黑夜","s.title":"设置","s.lang":"语言 / Language","s.langSub":"界面、题型指南和示例题解析都会切换。导入的题目保持原文。","s.count":"每组默认题数","s.countSub":"刷题页的默认题数。","s.showType":"做题时显示题型","s.showTypeSub":"刷题时默认显示题型。想练识别题型就关掉。","s.pace":"每题目标用时","s.paceSub":"超过时计时器会变色。实考平均每题约 84 秒。","s.sec":"秒","s.autoAi":"导入时用 AI 补全","s.autoAiSub":"导入题目时，默认勾选用 AI 补全缺少的难度和题型。","s.export":"导出全部数据","s.exportSub":"把练习记录、题库和刷题统计导出成 JSON 文件，留作备份。","s.exportBtn":"导出 JSON","s.exported":"已导出","s.exportNo":"这里不能下载文件。","s.exportFail":"导出没有完成。","s.where":"数据保存在哪里","s.saved":"设置已保存"
+"side.foot":"<b>刷题快捷键</b><br>A–E 选择答案 · Enter 确认 / 下一题","s.theme":"外观","s.themeSub":"白昼模式适合白天和明亮环境，黑夜模式更护眼。跟随系统会随电脑的深浅色设置自动切换。","s.light":"白昼","s.dark":"黑夜","s.system":"跟随系统","m.toLight":"切到白昼","m.toDark":"切到黑夜","ai.explain":"AI 深度解析","ai.again":"重新解析","ai.thinking":"AI 正在分析这道题…通常需要 10–40 秒","ai.askPh":"继续追问，比如：为什么 D 不是必要的？","ai.ask":"追问","ai.you":"你问","s.title":"设置","s.lang":"语言 / Language","s.langSub":"界面、题型指南和示例题解析都会切换。导入的题目保持原文。","s.count":"每组默认题数","s.countSub":"刷题页的默认题数。","s.showType":"做题时显示题型","s.showTypeSub":"刷题时默认显示题型。想练识别题型就关掉。","s.pace":"每题目标用时","s.paceSub":"超过时计时器会变色。实考平均每题约 84 秒。","s.sec":"秒","s.autoAi":"导入时用 AI 补全","s.autoAiSub":"导入题目时，默认勾选用 AI 补全缺少的难度和题型。","s.export":"导出全部数据","s.exportSub":"把练习记录、题库和刷题统计导出成 JSON 文件，留作备份。","s.exportBtn":"导出 JSON","s.exported":"已导出","s.exportNo":"这里不能下载文件。","s.exportFail":"导出没有完成。","s.where":"数据保存在哪里","s.saved":"设置已保存"
 },
 en:{
 "app.title":"LSAT Error Analyzer","tab.overview":"Overview","tab.drill":"Practice","tab.guide":"Question types","tab.bank":"Question bank","tab.log":"Log a test","tab.history":"History","tab.prefs":"Settings",
@@ -719,7 +726,7 @@ en:{
 "pi.title":"Where you're weakest","pi.sub":"Generated from your question-level data","pi.weak":"<b>{name}</b>: {p}% correct ({n} questions)","pi.weakD":"{g} points below your average.","pi.drop":"Accuracy drops at <b>{d}</b> difficulty","pi.dropD":"From {a}% to {b}%. Get {prev} questions solid before adding more difficulty.","pi.hardOk":"You get {p}% of hard questions right","pi.hardOkD":"Lean into harder sets.","pi.slow":"<b>{name}</b> is slow","pi.slowD":"{t} per question, {s} seconds over your target.","pi.trend":"Last 7 days: {a}% correct","pi.trendUp":"{d} points higher than the 7 days before.","pi.trendDown":"{d} points lower than the 7 days before.","pi.imp":"Most improved: {name}","pi.impD":"Up {d} points.","pi.none":"Practice a few sets and your weak spots will show up here.","pi.practice":"Practice these →",
 "pr.title":"Practice · overall accuracy","pr.week":"Last 7 days {p}","pr.outer":"Outer: overall","pr.inner":"Inner: last 7 days","pt.title":"Accuracy by question type","pt.sub":"Lowest first · types with fewer than 3 questions are listed last · arrows compare your earlier and later halves","pt.colType":"Type","pt.colAcc":"Accuracy","pt.colTime":"Time","pt.few":"few","pt.none":"No practice data for this section yet.","pt.go":"Practice","pt.n":"{n} questions",
 "pd.title":"Difficulty & section","pd.sub":"Accuracy · questions · avg time","pd.diff":"By difficulty","pd.sec":"By section","pd.reasons":"Why you missed (practice)","pd.noReasons":"Tag a reason when you miss a question and it'll be counted here.",
-"side.foot":"<b>Practice shortcuts</b><br>A–E to choose · Enter to submit / next","s.theme":"Appearance","s.themeSub":"Light mode suits daytime and bright rooms; dark mode is easier on the eyes. System follows your computer’s setting.","s.light":"Light","s.dark":"Dark","s.system":"System","m.toLight":"Light mode","m.toDark":"Dark mode","s.title":"Settings","s.lang":"Language / 语言","s.langSub":"Changes the interface, the question-type guide and sample explanations. Imported questions stay as written.","s.count":"Default questions per set","s.countSub":"Pre-selected on the Practice page.","s.showType":"Show question type","s.showTypeSub":"Show the type while answering by default. Turn off to practice recognizing types.","s.pace":"Target time per question","s.paceSub":"The timer changes color when you go over. The real test averages about 84 seconds.","s.sec":"sec","s.autoAi":"Fill gaps with AI on import","s.autoAiSub":"Pre-check the option to fill in missing difficulty and type with AI when importing.","s.export":"Export all data","s.exportSub":"Save your sessions, question bank and practice stats as a JSON backup.","s.exportBtn":"Export JSON","s.exported":"Exported","s.exportNo":"Downloads aren't available here.","s.exportFail":"The export didn't finish.","s.where":"Where your data is saved","s.saved":"Settings saved"
+"side.foot":"<b>Practice shortcuts</b><br>A–E to choose · Enter to submit / next","s.theme":"Appearance","s.themeSub":"Light mode suits daytime and bright rooms; dark mode is easier on the eyes. System follows your computer’s setting.","s.light":"Light","s.dark":"Dark","s.system":"System","m.toLight":"Light mode","m.toDark":"Dark mode","ai.explain":"AI explanation","ai.again":"Explain again","ai.thinking":"AI is analyzing this question… usually 10–40 seconds","ai.askPh":"Ask a follow-up, e.g. why isn’t D necessary?","ai.ask":"Ask","ai.you":"You asked","s.title":"Settings","s.lang":"Language / 语言","s.langSub":"Changes the interface, the question-type guide and sample explanations. Imported questions stay as written.","s.count":"Default questions per set","s.countSub":"Pre-selected on the Practice page.","s.showType":"Show question type","s.showTypeSub":"Show the type while answering by default. Turn off to practice recognizing types.","s.pace":"Target time per question","s.paceSub":"The timer changes color when you go over. The real test averages about 84 seconds.","s.sec":"sec","s.autoAi":"Fill gaps with AI on import","s.autoAiSub":"Pre-check the option to fill in missing difficulty and type with AI when importing.","s.export":"Export all data","s.exportSub":"Save your sessions, question bank and practice stats as a JSON backup.","s.exportBtn":"Export JSON","s.exported":"Exported","s.exportNo":"Downloads aren't available here.","s.exportFail":"The export didn't finish.","s.where":"Where your data is saved","s.saved":"Settings saved"
 }};
 const PREF_KEY="lsat-prefs-v1";
 let prefs={lang:"zh",count:10,showType:false,pace:84,autoAi:true,theme:"dark"};
@@ -1403,12 +1410,19 @@ $("#drillBody").addEventListener("click",e=>{
   if(b.id==="startQuiz"){const {qs}=poolFor(drillCfg);startQuiz(pick(qs,drillCfg.count,drillCfg.diff),cfgLabel(drillCfg));return}
   if(b.dataset.choice!=null&&quiz&&!quiz.items[quiz.i].revealed){quiz.items[quiz.i].chosen=+b.dataset.choice;renderQuestion();return}
   if(b.id==="confirmAns"){reveal();return}
+  if(b.id==="aiExplain"&&quiz){const it=quiz.items[quiz.i];aiRun(it,true);return}
+  if(b.id==="aiStop"){aiQCtl&&aiQCtl.abort();return}
   if(b.id==="nextQ"){next();return}
   if(b.dataset.qreason&&quiz){const it=quiz.items[quiz.i];it.reason=it.reason===b.dataset.qreason?null:b.dataset.qreason;renderQuestion();return}
   if(b.id==="quitQuiz"){if(b.dataset.armed){quiz=null;renderDrill()}else{b.dataset.armed="1";b.textContent=t("q.quitC")}return}
   if(b.id==="againQuiz"){quiz=null;const {qs}=poolFor(drillCfg);startQuiz(pick(qs,drillCfg.count,drillCfg.diff),cfgLabel(drillCfg));return}
   if(b.id==="redoWrong"){const w=quiz.items.filter(it=>!it.ok).map(it=>it.q);quiz=null;startQuiz(shuffle(w),t("dr.retry"));return}
   if(b.id==="backSetup"){quiz=null;renderDrill();return}
+});
+$("#drillBody").addEventListener("submit",e=>{
+  if(e.target.id!=="aiAsk"||!quiz)return;e.preventDefault();
+  const v=$("#aiQ").value.trim();if(!v)return;const it=quiz.items[quiz.i];
+  it.ai.msgs.push({role:"user",content:v});aiRun(it,false);
 });
 $("#drillBody").addEventListener("change",e=>{
   if(e.target.id==="cfgType"){drillCfg.type=e.target.value;renderDrill()}
@@ -1436,6 +1450,7 @@ function renderQuestion(){
       ${ex?`<div>${esc(ex)}</div>`:""}
       ${g?`<div class="tiny"><b>${t("q.howShort")}</b>${esc(L(g.how)[0])} <a href="#g-${q.sec}-${q.t}">${t("q.fullHow")}</a></div>`:""}
       ${it.ok?"":`<div><span class="label">${t("q.why")}</span><div class="chips" style="margin-top:4px">${REASON_KEYS.map(k=>`<button type="button" data-qreason="${k}" aria-pressed="${it.reason===k}">${rName(k)}</button>`).join("")}</div></div>`}
+      ${aiBlock(it)}
     </div>`:"";
   const isRC=q.sec==="RC"&&(q.stim||"").length>600;
   const elapsed=it.revealed?it.ms:Date.now()-quiz.qStart;
@@ -1454,11 +1469,67 @@ function renderQuestion(){
   clearInterval(tick);
   if(!it.revealed)tick=setInterval(()=>{const el=$("#qtimer");if(!el||!quiz)return;const ms=Date.now()-quiz.qStart;el.textContent=fmtTime(ms);el.classList.toggle("over",ms>paceMs())},1000);
 }
+
+/* ---- AI deep explanation ---- */
+const SPARK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.5l-1.8-5L5 9.7l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>';
+let aiQCtl=null;
+const fmtAi=s=>esc(s||"").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/^#{1,4}\s*(.+)$/gm,"<b>$1</b>");
+function aiBlock(it){
+  if(!state.ai)return "";
+  const a=it.ai||{msgs:[]};
+  const log=a.msgs.map(m=>m.role==="user"?`<div class="aiq">${t("ai.you")}：${esc(m.content)}</div>`:`<div class="aiout">${fmtAi(m.content)}</div>`).join("");
+  const live=a.busy?`<div class="aiout" id="aiLive">${a.live?fmtAi(a.live):`<span class="tiny">${t("ai.thinking")}</span>`}</div>`:"";
+  const hasAns=a.msgs.some(m=>m.role==="assistant");
+  return `<div class="aibox">
+    <div class="actions"><button type="button" class="btn ghost sm" id="aiExplain" ${a.busy?"disabled":""}>${SPARK}${t(hasAns?"ai.again":"ai.explain")}</button>${a.busy?`<button type="button" class="btn ghost sm" id="aiStop">${t("b.stop")}</button>`:""}</div>
+    ${log}${live}
+    ${a.err?`<div class="toast err">${esc(a.err)}</div>`:""}
+    ${hasAns&&!a.busy?`<form class="aiask" id="aiAsk"><input id="aiQ" autocomplete="off" placeholder="${esc(t("ai.askPh"))}" aria-label="${esc(t("ai.ask"))}"><button class="btn sm" type="submit">${t("ai.ask")}</button></form>`:""}
+  </div>`;
+}
+function explainPrompt(it){
+  const q=it.q,LT="ABCDE",x=TYPE_BY[q.sec+":"+q.t],zh=prefs.lang!=="en";
+  const titles=zh?["论证结构","这道题要你找什么","为什么 "+LT[q.a]+" 对","为什么你选的 "+LT[it.chosen]+" 错","其他选项","下次遇到这类题"]
+                 :["Argument structure","What the question asks","Why "+LT[q.a]+" is right","Why your answer "+LT[it.chosen]+" is wrong","The other choices","Next time"];
+  const sec=it.ok?titles.filter((_,i)=>i!==3):titles;
+  const ex=typeof q.ex==="string"?q.ex:(q.ex&&(q.ex.en||q.ex.zh))||"";
+  return `You are an expert LSAT tutor explaining one question to a student right after they answered it.
+Section: ${q.sec==="RC"?"Reading Comprehension":"Logical Reasoning"}. Question type: ${x?x.en+" ("+x.zh+")":"unknown"}. Difficulty: ${q.d?["","easy","medium","hard"][q.d]:"unrated"}.
+
+STIMULUS:
+${q.stim}
+
+QUESTION: ${q.q}
+${q.ch.map((c,i)=>"("+LT[i]+") "+c).join("\n")}
+
+Correct answer: (${LT[q.a]}). The student chose (${LT[it.chosen]}), which is ${it.ok?"correct":"incorrect"}.${!it.ok&&it.reason?" The student says the reason for the miss was: "+rName(it.reason)+".":""}${ex?"\nReference explanation (may be brief): "+ex:""}
+
+Write the explanation in ${zh?"Simplified Chinese, keeping key LSAT terms in English in parentheses the first time they appear":"English"}.
+Use exactly these sections, each starting with its title in bold on its own line: ${sec.map(s=>"**"+s+"**").join(", ")}.
+- Structure: state the conclusion and the premises in a line each.
+- What the question asks: the task for this question type and the gap or key point. For assumption questions, apply the negation test to the correct answer.
+${it.ok?"":"- Why the student's answer is wrong: name the exact trap it sets.\n"}- Other choices: one short line per remaining choice.
+- Next time: one or two concrete habits for this question type.
+Be concise: at most about ${zh?"600 Chinese characters":"350 words"}. Use plain text with "- " bullets; no tables, no headings other than the bold section titles.`;
+}
+async function aiRun(it,reset){
+  if(!state.ai)return;
+  if(reset||!it.ai)it.ai={msgs:[],busy:false,err:"",live:""};
+  const a=it.ai;
+  const input=[{role:"user",content:explainPrompt(it)},...a.msgs];
+  a.busy=true;a.err="";a.live="";aiQCtl=new AbortController();renderQuestion();
+  const opts={signal:aiQCtl.signal,onText:({text})=>{a.live=text;const el=document.getElementById("aiLive");if(el)el.innerHTML=fmtAi(text)}};
+  if(a.msgs.length)opts.cache=false;
+  try{const r=await state.ai(a.msgs.length?input:input[0].content,opts);a.msgs.push({role:"assistant",content:r.text})}
+  catch(e){if(e&&e.code!=="cancelled")a.err=aiErr(e);if(e&&e.text)a.msgs.push({role:"assistant",content:e.text})}
+  finally{a.busy=false;a.live="";aiQCtl=null;if(quiz&&quiz.items[quiz.i]===it&&!quiz.done&&viewIs("drill"))renderQuestion()}
+}
 function reveal(){
   const it=quiz.items[quiz.i];if(it.chosen==null||it.revealed)return;
   it.revealed=true;it.ok=it.chosen===it.q.a;it.ms=Date.now()-quiz.qStart;renderQuestion();
 }
 function next(){
+  if(aiQCtl)aiQCtl.abort();
   if(quiz.i<quiz.items.length-1){quiz.i++;quiz.qStart=Date.now();renderQuestion();window.scrollTo({top:0})}
   else{quiz.done=true;clearInterval(tick);finishQuiz();renderResult()}
 }
